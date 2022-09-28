@@ -1,147 +1,97 @@
-# ucsd_capstone
+# UCSD CAPSTONE PROJECT
 Capstone Project Placeholder
 
 
-# ML Pipeline
-
-### Problem Definition
-
-1. Problem statement
-2. Ideal solution
-3. Understanding + insight of problem
-4. Technical requirements
-
-### Research
-
-1. Data Structure +  source
-2. Solution form
-3. Model architecture
-4. Algorithm research
-5. Hardware + software requirements
-
-### Data Aggregation/Mining/Scrapping
-
-1. Raw source data + annotations
-
-### Data Prep/Preprocessing/Augmentation
-
-1. Cleaned up data divided into train/validation/test
-
-### Model Implementation
-
-1. Ready to train model
-
-### Training
-
-1. Developed model (hyperparameters, model parameters)
-2. Training metrics
-
-### Evaluation
-
-1. Evaluation results
-2. Strategies 
-3. Outputs
-
-### Param Tuning + Inference
-
-1. Refined model
-
-### Deployment
-
 # Architectural Design
 
-1. Architecture Design Automation
-    1. Plan generator
-    2. Details generation
-    3. Rendering generator
-    4. Inspiration render generator
-2. Furniture detection
-3. Architecture code review automation and check
-4. Architecture style detection
-5. DIY advisor
-6. Parking/AEC\
+## Design
+
+1. Building design: Generate floor plans, elevations, sections given certain parameters. Applications:
+    1. Parking garages
+    2. Small homes
+    3. Apartments
+    4. Offices
+    5. Warehouses
+2. Building construction details: Generate details given certain products and parameters. Examples:
+    1. Window/doors jambs, sills, heads, mullions, 
+    2. Flashing
+    3. Waterproofing
+    4. Wall sections
+3. Building renderings: Generate 3D renderings given floor plans and elevations, or 3D models.
+
+## Analysis
+
+1. Architectural code inspection: Review building codes (International, National, State, City) to flag noncompliance.
+2. Small project DIY kit: Recommend how to construct a small backyard project like a tiny hut.
+3. Energy analysis: Given information on building envelope and floor plans, predict building energy requirements more efficiently than today’s software
 
 # Climate Change
 
-1. Climate change analysis/detection
-2. Wildlife detection
-3. Wildfire detection
-4. Disease spread predictor
-5. Drought detector
-6. Energy
-7. Building efficiencies
-8. Policies
-9. Harm - Deforestation tracking, greenhouse gas tracking
-10. Education
-    1. Individual impact/action
-    2. Collective decision making
-11. Energy sources
-    1. Electrical systems
+## Detection
+
+1. Biodiversity loss: Detect:
+    1. Forest fires
+    2. Habitat loss
+        1. Forests/peatland loss
+        2. Glacier melts in Siberia, Alaska
+    3. Animal population analysis
+    4. Underground animal trade
+2. Weather detection:
+    1. Drought detector
+    2. Hurricane detector
+    3. Earthquake detector
+
+## Solution
+
+1. Energy:
+    1. Building efficiencies
     2. Solar engineering
-12. Energy consumption
-    1. Transportation
-    2. Building/cities
-    3. Industries
-    4. Farming
-13. Biodiversity Loss
-    1. Wildlife
-    2. Forests/peatlands
-14. CO2 removal 
-15. Climate Predictions
-16. Societal Impacts
-    1. Infrastructure
-    2. Crisis
-    3. Finance
+    3. Energy consumption
+        1. Transportation
+        2. Building/cities
+        3. Industries
+        4. Farming
+2. Pollution removal
+    1. Garbage collection/better recycling? 
+    2. Water purification
+3. Government Policies:
+    1. Collective decision making tools for governments
+4. Individual CO2 impact and actions they can take to mitigate
 
-# Computer Vision
+# Anthropology
 
-1. 3D object detection/AR
-2. Webcam footage super-sampling
-3. Location detection through image data
-4. Speed detection through video data
-5. Snapchat filters
+1. Human migration: Analyze human migration by studying genes and archaeological data.
+2. Potential archaeological site detection through satellite images.
 
-# Automation
+# World Issues
 
-1. Bus driver sleep detection
-2. Cleaning bot
-3. Garbage collector
+1. Social-media addiction: Finding a better recommendation system to prevent infinite scrolling, misinformation bubbles, and news/information overload/overconsumption.
+2. Mental health crisis: How to create better ways to get help? Chatbot?
+3. Power conflicts and poverty
+4. Increasing individual reasoning and comprehension: AI-assisted tests and learning methodologies
+
+# Artificial General Intelligence
+
+1. Brain emulations
+2. Multimodal learning
+    1. Can I try working on Yann LeCun’s model for the way to AGI?s 
+
+# Medical/Biotech
+
+1. Anomaly detection
+2. Disease diagnoses
+3. Medical reports deidentification
+
+# Misc.
+
+1. Location detection through Google Street View image data
+2. Car speed detection through video data
+3. Distracted driver detection
 4. Labeling automation
-5. Task time predictor
-6. Time Budget/Time Analysis
+5. Time Budget/Time Analysis
     1. See where you are spending your minutes
     2. Align where you are spending your time to your values or where you wanna spend your time 
     3. See a time-left analysis. How many more times would you be hanging out with your friend? How many times more have you left to have dinner with your parents? 
     4. Rate each activity for importance, uplifting or draining
     5. Automate using IoTs and schedules
     6. Predict, analyze, get inspirational quotes, get advice based on predictions that helps align your week to your values
-
-# ML Architectures
-
-1. Classification
-2. Detection
-3. Segmentation
-4. Style transfer
-5. Generative modeling
-6. Image reconstruction
-7. Supersampling
-
-# World Issues
-
-1. Social-media addiction (infinite scrolling)
-2. Recommendation system bubbles and misinformation
-3. News/information overload and over-consumption
-4. Shortened attention spans
-5. Mental health crisis
-6. Power conflicts
-7. Individual reasoning and comprehension increase
-8. Ageing
-
-# Artificial General Intelligence
-
-1. Brain emulations
-2. Combine image, audio, text generations
-3. Chatbots
-4. Robotics
-5. RL
-6. Yann LeCun’s AGI system
