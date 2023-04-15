@@ -1,0 +1,16 @@
+- [x] Start Planning for Your Capstone
+- [x] Collect Your Data
+- [ ] Benchmark Your Model
+- [x] Project Proposal
+- [ ] Data Wrangling & Exploration
+- [ ] Survey Existing Research and Reproduce Available Solutions
+- [ ] Try Various Models
+- [ ] Build Your Machine Learning (or Deep Learning) Prototype
+- [ ] Scale Your Prototype with Large-Scale Data
+- [ ] Study Optional units (Advanced Capstone only)
+- [ ] Pick your deployment method
+- [ ] Design Your Deployment Solution Architecture
+- [ ] Run Your Code End-to-End with Logging and Testing
+- [ ] Deployment Implementation
+- [ ] Share your project with the world
+- [ ] Final Submission 

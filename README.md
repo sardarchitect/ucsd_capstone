@@ -8,6 +8,7 @@ The redesign of public spaces with pedestrian needs in mind offers an opportunit
 
 While there are existing products that provide analysis of pedestrian foot traffic across a neighborhood, they mostly use mobile data to get an aggregation of street usage. There are other products that help track customer desnity, but they are optimized for controlled, indoor enviornmnets like grocery stores. Having a computer vision model that analyses pedestrian traffic on specific sections of an outdoor environment, for example a plaza, will provide designers a granular analysis of how the space is currently being used.
 
+
 ## Objectives
 To aid in this effort, I propose the development of a computer vision model that can analyze outdoor pedestrian foot traffic patterns, including the number of pedestrians, their direction of movement, the speed at which they are moving, and behaviors they are most likely performing. This information can be used by architects and urban planners to design more pedestrian-friendly spaces, with better flow, accessibility, sustainability, and safety. 
 
