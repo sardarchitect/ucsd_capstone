@@ -1,0 +1,10 @@
+{
+    "0": "object_id",
+    "1": "object_duration",
+    "2": "current_frame",
+    "3": "bbox_lefttop_x",
+    "4": "bbox_lefttop_y",
+    "5": "bbox_width",
+    "6": "bbox_height",
+    "7": "object_type"
+}
