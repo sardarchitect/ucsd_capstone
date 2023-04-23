@@ -1,0 +1,21 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Any_Name",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/pedtracker/main.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": [
+                "-v", "/mnt/d/data/virat/videos/VIRAT_S_000001.mp4",
+                "-r", "False",
+                "-vi", "True"
+            ]
+        }
+    ]
+}
