@@ -2,7 +2,7 @@ import os
 import cv2 as cv
 import pandas as pd
 import json
-from utils.utils import dict_key_string_to_int
+from util.util import dict_key_string_to_int
 
 def get_virat_directories():
     # Returns paths to VIRAT dataset directories

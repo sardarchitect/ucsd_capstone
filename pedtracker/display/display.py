@@ -1,5 +1,7 @@
 import cv2 as cv
 from virat.virat import get_annotations
+import torch
+from model.model import yolov5
 
 def get_bbox(df, current_frame):
     bbox_list = []
@@ -16,17 +18,13 @@ def get_bbox(df, current_frame):
 
 def display_raw_video(video_path):
     # Displays videos provided the path to the video along with the current frame
-
     print("Displaying current video:", video_path)
     capture = cv.VideoCapture(video_path)       
-    
     while True:
         isTrue, current_frame = capture.read()
-        
         # Display current frame number
         current_frame_number = capture.get(cv.CAP_PROP_POS_FRAMES)
         cv.putText(img=current_frame, text=str(current_frame_number), org=(50,50), fontFace=cv.FONT_HERSHEY_SIMPLEX, fontScale=1, color=(255,255,255), thickness=2)
-        
         cv.imshow('Video', current_frame)
         if cv.waitKey(20) & 0xFF == ord('d'):
             break
@@ -38,20 +36,15 @@ def display_annotated_video(video_path, virat=True):
     # If video from VIRAT, then finds annotation for the specified video using in-built functions
     if virat:
         annotations_df = get_annotations(video_path, virat)
-    
     print("Displaying current video:", video_path)
     capture = cv.VideoCapture(video_path)       
-    
     while True:
         isTrue, current_frame = capture.read()
-        
         # Display current frame number
         current_frame_number = capture.get(cv.CAP_PROP_POS_FRAMES)
         cv.putText(img=current_frame, text=str(current_frame_number), org=(50,50), fontFace=cv.FONT_HERSHEY_SIMPLEX, fontScale=1, color=(255,255,255), thickness=2)
-        
         # GET BBOX LIST FOR CURRENT FRAME
         bbox_list = get_bbox(annotations_df, current_frame_number)
-
         # DRAW RECTANGLE FOR EVERY BBOX IN FRAME
         current_frame_overlay = current_frame.copy() # Duplicate to apply transparency mask
         for bbox in bbox_list:
@@ -61,20 +54,25 @@ def display_annotated_video(video_path, virat=True):
             alpha = 0.05 # Transparency factor
             current_frame = cv.addWeighted(current_frame_overlay, alpha, current_frame, 1 - alpha, 0)
             cv.putText(img=current_frame, text=str(bbox[4]), org=(bbox[0], bbox[1]), fontFace=cv.FONT_HERSHEY_SIMPLEX, fontScale=0.5, color=(255,255,255), thickness=2)
-        
         # DRAW CURRENT FRAME NUMBER
         cv.putText(img=current_frame, text=str(current_frame_number), org=(50,50), fontFace=cv.FONT_HERSHEY_SIMPLEX, fontScale=1, color=(255,255,255), thickness=2)
-
-
         cv.imshow('Video', current_frame)
         if cv.waitKey(20) & 0xFF == ord('d'):
             break
     capture.release()
     cv.destroyAllWindows()
 
-
-
-
-    # Find annotation file in DF
-    # Load annotation file as DF
-    # Return annotation DF
+def display_yolo(video_path):
+    print("Displaying current video:", video_path)
+    capture = cv.VideoCapture(video_path)
+    model = yolov5()
+    while True:
+        isTrue, current_frame = capture.read()
+        results = model(current_frame)
+        results.show()
+        cv.imshow('Video', current_frame)
+        if cv.waitKey(20) & 0xFF == ord('d'):
+            break
+    # DESTROY WINDOWS
+    capture.release()
+    cv.destroyAllWindows()
