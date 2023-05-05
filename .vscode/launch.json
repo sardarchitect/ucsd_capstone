@@ -12,9 +12,8 @@
             "console": "integratedTerminal",
             "justMyCode": true,
             "args": [
-                "-v", "/mnt/d/data/virat/videos/VIRAT_S_000001.mp4",
-                "-r", "False",
-                "-vi", "True"
+                "-p", "/mnt/d/data/virat/videos/VIRAT_S_000002.mp4",
+                "-r",
             ]
         }
     ]
