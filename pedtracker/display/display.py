@@ -1,7 +1,5 @@
 import cv2 as cv
 from virat.virat import get_annotations
-import torch
-from model.model import yolov5
 
 def get_bbox(df, current_frame):
     bbox_list = []
@@ -59,20 +57,5 @@ def display_annotated_video(video_path, virat=True):
         cv.imshow('Video', current_frame)
         if cv.waitKey(20) & 0xFF == ord('d'):
             break
-    capture.release()
-    cv.destroyAllWindows()
-
-def display_yolo(video_path):
-    print("Displaying current video:", video_path)
-    capture = cv.VideoCapture(video_path)
-    model = yolov5()
-    while True:
-        isTrue, current_frame = capture.read()
-        results = model(current_frame)
-        results.show()
-        cv.imshow('Video', current_frame)
-        if cv.waitKey(20) & 0xFF == ord('d'):
-            break
-    # DESTROY WINDOWS
     capture.release()
     cv.destroyAllWindows()

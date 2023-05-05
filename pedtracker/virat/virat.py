@@ -10,7 +10,7 @@ def get_virat_directories():
     data_dir = '/mnt/d/data/virat/'
     annotation_dir = data_dir + 'annotations/'
     video_dir = data_dir + 'videos/'
-    annotation_cols_dir = '/mnt/d/repos/github.com/ucsd_capstone/pedtracker/virat/'
+    annotation_cols_dir = '/home/sardarchitect/repos/github.com/ucsd_capstone/pedtracker/virat/'
     return data_dir, annotation_dir, video_dir, annotation_cols_dir
 
 def build_virat():
