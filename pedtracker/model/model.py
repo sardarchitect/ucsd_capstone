@@ -28,3 +28,5 @@ def inference(video_path, model_type='yolov5'):
     # DESTROY WINDOWS
     capture.release()
     cv.destroyAllWindows()
+
+    return results
