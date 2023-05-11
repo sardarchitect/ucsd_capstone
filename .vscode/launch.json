@@ -8,12 +8,12 @@
             "name": "Python: Any_Name",
             "type": "python",
             "request": "launch",
-            "program": "${workspaceFolder}/pedtracker/main.py",
+            "program": "${workspaceFolder}/streetstudy/main.py",
             "console": "integratedTerminal",
             "justMyCode": true,
             "args": [
                 "-p", "/mnt/d/data/virat/videos/VIRAT_S_000002.mp4",
-                "-r",
+                "-vi",
             ]
         }
     ]
