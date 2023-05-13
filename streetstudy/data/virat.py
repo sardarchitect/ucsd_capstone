@@ -2,7 +2,7 @@ import os
 import cv2 as cv
 import pandas as pd
 import json
-from utils.helper import dict_key_string_to_int
+from streetstudy.utils.helper import dict_key_string_to_int
 
 def get_directories():
     # Returns tuple of paths to the VIRAT dataset directories
@@ -15,6 +15,9 @@ def get_directories():
 def build():
     # Returns Pandas DataFrame containing VIRAT dataset video_names, paths, annotation files, and video duration
     _, annotation_dir, video_dir, _ = get_directories()
+
+    if os.path.exists('./.data_cache/videos_df.pkl'):
+        return pd.read_pickle('./.data_cache/videos_df.pkl')
     
     videos = [] 
     for _, video in enumerate(os.listdir(video_dir)):
@@ -43,7 +46,9 @@ def build():
     videos_df.drop(videos_df[videos_df['event_file']==''].index, inplace=True)
     videos_df.drop(videos_df[videos_df['object_file']==''].index, inplace=True)
     videos_df.drop(videos_df[videos_df['mapping_file']==''].index, inplace=True)
-
+    
+    os.mkdir('./.data_cache')
+    videos_df.to_pickle("./.data_cache/videos_df.pkl")
     return videos_df
 
 def get_annotations(video_path, type='object'):

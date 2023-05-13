@@ -1,6 +1,6 @@
 import argparse
 from utils.display import display_raw_video, display_annotated_video, get_annotations
-from model import yolov5
+from streetstudy.model import yolo
 
 def main():
     parser = argparse.ArgumentParser()
@@ -18,7 +18,7 @@ def main():
         display_annotated_video(args.video_path, annotations_df)
 
     if args.inference:
-        yolov5.inference(args.video_path)
+        yolo.inference(args.video_path)
 
 if __name__ == '__main__':
     main()
