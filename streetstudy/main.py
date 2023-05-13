@@ -1,6 +1,6 @@
 import argparse
 from utils.display import display_raw_video, display_annotated_video, get_annotations
-from streetstudy.model import yolo
+from model import yolo
 
 def main():
     parser = argparse.ArgumentParser()

@@ -2,7 +2,7 @@ import os
 import cv2 as cv
 import pandas as pd
 import json
-from streetstudy.utils.helper import dict_key_string_to_int
+from utils.helper import dict_key_string_to_int
 
 def get_directories():
     # Returns tuple of paths to the VIRAT dataset directories
