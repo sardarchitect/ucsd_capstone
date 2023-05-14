@@ -1,4 +1,6 @@
 .ipynb_checkpoints
-exploration/notebooks/yolov5.ipynb
 __pycache__
+
 .data_cache
+/virat/
+/ultralytics
