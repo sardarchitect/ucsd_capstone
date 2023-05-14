@@ -1,5 +1,5 @@
 import cv2 as cv
-from streetstudy.model import yolo
+from model import yolo
 from tqdm import tqdm
 
 def inference(video_path, model_type='yolov5', display_video=False):

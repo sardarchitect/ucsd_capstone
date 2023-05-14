@@ -1,6 +1,6 @@
 import argparse
-from utils.display import display_raw_video, display_annotated_video, get_annotations
-from model import yolo
+from utility.display import display_raw_video, display_annotated_video, get_annotations
+from model.predict import inference
 
 def main():
     parser = argparse.ArgumentParser()
@@ -18,7 +18,7 @@ def main():
         display_annotated_video(args.video_path, annotations_df)
 
     if args.inference:
-        yolo.inference(args.video_path)
+        inference(args.video_path)
 
 if __name__ == '__main__':
     main()
