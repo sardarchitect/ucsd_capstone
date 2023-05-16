@@ -1,7 +1,0 @@
-path: /home/sardarchitect/repos/github.com/ucsd_capstone/virat/yolo
-train: images/train
-val: images/train
-# test: images/test
-
-names:
-  0: person
