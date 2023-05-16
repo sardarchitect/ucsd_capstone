@@ -1,0 +1,6 @@
+python ultralytics/yolov5/train.py --img 128 --cfg training/yolov5s.yaml --hyp training/hyp.scratch-high.yaml --batch 32 --epochs 10 --data training/dataset.yaml --weights yolov5s.pt --workers 4 --name streetstudy_yolov5
+
+# decrease img size
+# need more epochs, train on less data
+
+python detect.py --source ../Road_Sign_Dataset/images/test/ --weights runs/train/yolo_road_det/weights/best.pt --conf 0.25 --name yolo_road_det
