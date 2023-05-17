@@ -1,5 +1,4 @@
 import cv2 as cv
-from data.virat import get_annotations
 
 def get_bbox(df, current_frame):
     # Returns list of all bounding boxes given a Pandas DataFrame and the current video frame
