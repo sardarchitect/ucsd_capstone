@@ -1,8 +1,0 @@
-{
-    "0": "event_id",
-    "1": "event_type",
-    "2": "event_duration",
-    "3": "start_frame",
-    "4": "end_frame",
-    "5": "num_obj"
-}
