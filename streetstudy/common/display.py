@@ -1,4 +1,7 @@
+import numpy as np
+import matplotlib.pyplot as plt
 import cv2 as cv
+from scipy.stats import gaussian_kde
 
 def get_bbox(df, current_frame):
     # Returns list of all bounding boxes given a Pandas DataFrame and the current video frame
@@ -67,3 +70,12 @@ def display_annotated_video(video_path, annotations_df):
     
     capture.release()
     cv.destroyAllWindows()
+
+def display_heatmap(x, y, nbins=30):
+    # Evaluate a gaussian kde on a regular grid of nbins x nbins over data extents
+    k = gaussian_kde((x,y))
+    xi, yi = np.mgrid[x.min():x.max():nbins*1j, y.min():y.max():nbins*1j]
+    zi = k(np.vstack([xi.flatten(), yi.flatten()]))
+
+    plt.pcolormesh(xi, yi, zi.reshape(xi.shape))
+    plt.savefig('./heatmap.png')
