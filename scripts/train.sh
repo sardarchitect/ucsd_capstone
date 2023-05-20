@@ -1,0 +1,1 @@
+python yolov5/train.py --img 640 --epochs 3 --data streetstudy/training/dataset.yaml --cfg streetstudy/training/yolov5s.yaml --weights '' --name streetstudy --nosave --cache

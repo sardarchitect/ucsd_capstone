@@ -1,3 +1,0 @@
-python yolov5/train.py --img 640 --epochs 3 --data streetstudy/training/dataset.yaml --cfg streetstudy/training/yolov5s.yaml --weights '' --name streetstudy --nosave --cache
-
-python yolov5/detect.py --source virat/yolo_sample/images/test/ --weights 'yolov5/runs/train/streetstudy/weights/best.pt' --img 650 --conf 0.01 --save-txt

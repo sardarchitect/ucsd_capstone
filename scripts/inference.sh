@@ -1,0 +1,1 @@
+python yolov5/detect.py --source virat/videos/VIRAT_S_000002.mp4 --weights yolov5s.pt --img 1280 --conf 0.1 --name coco
