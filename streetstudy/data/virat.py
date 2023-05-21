@@ -4,14 +4,14 @@ import pandas as pd
 import numpy as np
 from tqdm.auto import tqdm
 
-def get_directories():
+def get_dataset_directories():
     # Returns tuple of paths to the VIRAT dataset directories
     data_dir = '/home/sardarchitect/repos/github.com/ucsd_capstone/virat/'
     annotation_dir = data_dir + 'annotations/'
     video_dir = data_dir + 'videos/'
     return data_dir, annotation_dir, video_dir
 
-def get_annotation_col_names(name):
+def get_column_names(name):
     # Returns column names for VIRAT dataset
     if name == "events_type":
         events_type = {
@@ -77,16 +77,16 @@ def get_annotation_col_names(name):
     else:
         print('Provide a valid column name')
 
-def build_dataset():
+def get_dataset_df():
     # Returns Pandas DataFrame containing VIRAT dataset video_names, paths, annotation files, and video duration
-    _, annotation_dir, video_dir = get_directories()
+    _, annotation_dir, video_dir = get_dataset_directories()
 
     # If DataFrame already exists, return DataFrame
     if os.path.exists('./.data_cache/videos_df.pkl'):
         return pd.read_pickle('./.data_cache/videos_df.pkl')
     
     # Create a temporary list to store video data
-    videos_list = [] 
+    videos_list = []
     for _, video in enumerate(os.listdir(video_dir)):
         video_name = video.removesuffix('.mp4')
         video_path = video_dir + video
@@ -123,24 +123,26 @@ def build_dataset():
     videos_df.to_pickle("./.data_cache/videos_df.pkl")    
     return videos_df
 
-def get_annotations(video_path, type='object', format='virat'):
+def get_annotations_df(video_path, type='object', format='virat'):
     # Returns a dataframe of the specified annotation file of the specified video from the VIRAT dataset
-    _, annotation_dir, _ = get_directories()
-    videos_df = build_dataset()
+    _, annotation_dir, _ = get_dataset_directories()
+    videos_df = get_dataset_df()
     
     # Find video in DataFrame
     video = videos_df.loc[videos_df['path'] == video_path]
-    # Find associated objects file
-    annotation_df = pd.read_csv(annotation_dir + video['object_file'][0], delim_whitespace=True, header=None)
-    # Rename columns
-    objects_col = get_annotation_col_names('objects')
-    annotation_df = annotation_df.rename(objects_col, axis=1)
-    annotation_df = annotation_df[annotation_df['object_type'] == 1]
+    if type=='object':
+        # Find associated objects file
+        annotation_df = pd.read_csv(annotation_dir + video['object_file'][0], delim_whitespace=True, header=None)
+        # Rename columns
+        objects_col = get_column_names('objects')
+        annotation_df = annotation_df.rename(objects_col, axis=1)
+        annotation_df = annotation_df[annotation_df['object_type'] == 1]
     if format == 'yolo':
-        return virat_to_yolo_annotations(video, annotation_df)
+        return convert_virat_to_yolo(video, annotation_df)
+    
     return annotation_df
 
-def virat_to_yolo_annotations(video, annotation_df):
+def convert_virat_to_yolo(video, annotation_df):
     df = annotation_df.copy()
     df['object_type'] = 0
 
@@ -157,17 +159,18 @@ def virat_to_yolo_annotations(video, annotation_df):
     df = df[['current_frame', 'object_type', 'bbox_center_x', 'bbox_center_y', 'bbox_width', 'bbox_height']]
     return df
 
-
-def virat_to_yolo(video, annotation_df, save_dir):
+def build_virat_to_yolo_directory(video, annotation_df, save_dir):
     # Converts VIRAT dataset to YOLO-specific folder structure
     if not os.path.exists(f'{save_dir}/labels'):
             os.mkdir(f'{save_dir}/labels')
+    
     if not os.path.exists(f'{save_dir}/images'):
             os.mkdir(f'{save_dir}/images')
 
     capture = cv.VideoCapture(video.path)
+    
     for count in tqdm(range(video['num_frames'])):
-        if count not in df['current_frame'].unique():
+        if count not in annotation_df['current_frame'].unique():
             continue    
         # Extract frame
         success, image = capture.read()
@@ -177,5 +180,5 @@ def virat_to_yolo(video, annotation_df, save_dir):
         cv.imwrite(f"{save_dir}/images/{video.name}_{count}.jpg", image)
 
         # Extract annotation
-        bboxs = df[df['current_frame'] == count][['object_type', 'bbox_center_x', 'bbox_center_y', 'bbox_width', 'bbox_height']]
+        bboxs = annotation_df[annotation_df['current_frame'] == count][['object_type', 'bbox_center_x', 'bbox_center_y', 'bbox_width', 'bbox_height']]
         np.savetxt(f'{save_dir}/labels/{video.name}_{count}.txt', bboxs.values, fmt='%.0f %.4f %.4f %.4f %.4f')

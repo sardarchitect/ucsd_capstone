@@ -1,8 +1,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import cv2 as cv
-from scipy.stats import gaussian_kde
+# from scipy.stats import gaussian_kde
 import seaborn as sns
+import streamlit as st
+import pandas as pd
 
 def get_bbox(df, current_frame):
     # Returns list of all bounding boxes given a Pandas DataFrame and the current video frame
@@ -72,20 +74,13 @@ def display_annotated_video(video_path, annotations_df):
     capture.release()
     cv.destroyAllWindows()
 
-def display_heatmap(df, nbins=150):
+def display_heatmap(frame, df):
     # Evaluate a gaussian kde on a regular grid of nbins x nbins over data extents
-    '''
-    k = gaussian_kde((x,y))
-    xi, yi = np.mgrid[x.min():x.max():nbins*1j, y.min():y.max():nbins*1j]
-    zi = k(np.vstack([xi.flatten(), yi.flatten()]))
 
-    plt.pcolormesh(xi, yi, zi.reshape(xi.shape))
-    plt.savefig('./heatmap.png')
-    plt.imshow(np.rot90(zi), extents=[x.min(), x.max(), y.min(), y.max()])
-    '''
-    
-    sns.kdeplot(data=df, x='x',y='y', fill=True,thresh=0, levels=100, cmap="mako" )
-    
-    plt.gca().invert_yaxis()
-    plt.show()
-    
+        fig, ax = plt.subplots()
+        sns.kdeplot(data=df, x='x',y='y', thresh=0, levels=50, ax=ax, fill=True, alpha=0.2, cmap='hot')
+        fig.gca().invert_yaxis()
+        plt.imshow(frame)
+        ax.get_yaxis().set_visible(False)
+        ax.get_xaxis().set_visible(False)
+        
