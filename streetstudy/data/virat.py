@@ -123,7 +123,7 @@ def get_dataset_df():
     videos_df.to_pickle("./.data_cache/videos_df.pkl")    
     return videos_df
 
-def get_annotations_df(video_path, type='object', format='virat'):
+def get_annotations_df(video_path, type='object', format='virat', normalize=True, object_id=False):
     # Returns a dataframe of the specified annotation file of the specified video from the VIRAT dataset
     _, annotation_dir, _ = get_dataset_directories()
     videos_df = get_dataset_df()
@@ -138,25 +138,30 @@ def get_annotations_df(video_path, type='object', format='virat'):
         annotation_df = annotation_df.rename(objects_col, axis=1)
         annotation_df = annotation_df[annotation_df['object_type'] == 1]
     if format == 'yolo':
-        return convert_virat_to_yolo(video, annotation_df)
+        return convert_virat_to_yolo(video, annotation_df, normalize=normalize, object_id=object_id)
     
     return annotation_df
 
-def convert_virat_to_yolo(video, annotation_df):
+def convert_virat_to_yolo(video, annotation_df, normalize=True, object_id=False):
     df = annotation_df.copy()
     df['object_type'] = 0
 
     df['bbox_center_x'] = df['bbox_lefttop_x'] + (df['bbox_width'] / 2)
-    df['bbox_center_y'] = df['bbox_lefttop_y'] + (df['bbox_height'] / 2)  
+    df['bbox_center_y'] = df['bbox_lefttop_y'] + (df['bbox_height'] / 2) 
 
-    # Normalize to image size
-    df['bbox_center_x'] = round(df['bbox_center_x'] / video['image_width'][0], 3)
-    df['bbox_center_y'] = round(df['bbox_center_y'] / video['image_height'][0], 3)
-    df['bbox_width'] = (df['bbox_width'] / video['image_width'][0])
-    df['bbox_height'] = (df['bbox_height'] / video['image_height'][0])
+    if normalize:
+        # Normalize to image size
+        df['bbox_center_x'] = round(df['bbox_center_x'] / video['image_width'][0], 3)
+        df['bbox_center_y'] = round(df['bbox_center_y'] / video['image_height'][0], 3)
+        df['bbox_width'] = (df['bbox_width'] / video['image_width'][0])
+        df['bbox_height'] = (df['bbox_height'] / video['image_height'][0])
 
-    df.drop(['object_id', 'object_duration', 'bbox_lefttop_x', 'bbox_lefttop_y'], axis=1, inplace=True)
-    df = df[['current_frame', 'object_type', 'bbox_center_x', 'bbox_center_y', 'bbox_width', 'bbox_height']]
+    if object_id:
+        df.drop(['object_duration', 'bbox_lefttop_x', 'bbox_lefttop_y'], axis=1, inplace=True)
+        df = df[['current_frame', 'object_type', 'object_id', 'bbox_center_x', 'bbox_center_y', 'bbox_width', 'bbox_height']]
+    else:
+        df.drop(['object_id', 'object_duration', 'bbox_lefttop_x', 'bbox_lefttop_y'], axis=1, inplace=True)
+        df = df[['current_frame', 'object_type', 'bbox_center_x', 'bbox_center_y', 'bbox_width', 'bbox_height']]
     return df
 
 def build_virat_to_yolo_directory(video, annotation_df, save_dir):
