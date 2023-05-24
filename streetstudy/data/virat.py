@@ -158,7 +158,7 @@ def convert_virat_to_yolo(video, annotation_df, normalize=True, object_id=False)
 
     if object_id:
         df.drop(['object_duration', 'bbox_lefttop_x', 'bbox_lefttop_y'], axis=1, inplace=True)
-        df = df[['current_frame', 'object_type', 'object_id', 'bbox_center_x', 'bbox_center_y', 'bbox_width', 'bbox_height']]
+        df = df[['current_frame', 'object_id', 'object_type', 'bbox_center_x', 'bbox_center_y', 'bbox_width', 'bbox_height']]
     else:
         df.drop(['object_id', 'object_duration', 'bbox_lefttop_x', 'bbox_lefttop_y'], axis=1, inplace=True)
         df = df[['current_frame', 'object_type', 'bbox_center_x', 'bbox_center_y', 'bbox_width', 'bbox_height']]

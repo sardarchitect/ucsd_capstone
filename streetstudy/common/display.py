@@ -1,25 +1,21 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.patches
 import cv2 as cv
 # from scipy.stats import gaussian_kde
 import seaborn as sns
 import streamlit as st
 import pandas as pd
 
-def get_bbox(df, current_frame):
-    # Returns list of all bounding boxes given a Pandas DataFrame and the current video frame
-    bbox_list = []
-    for _, row in (df[df['current_frame'] == current_frame]).iterrows():
-
-        bbox_lefttop_x = row["bbox_lefttop_x"]
-        bbox_lefttop_y = row["bbox_lefttop_y"]
-        bbox_width = row["bbox_width"]
-        bbox_height = row["bbox_height"]
-        bbox_rightbottom_x = bbox_lefttop_x + bbox_width
-        bbox_rightbottom_y = bbox_lefttop_y + bbox_height
-        
-        bbox_list.append([bbox_lefttop_x, bbox_lefttop_y, bbox_rightbottom_x, bbox_rightbottom_y, row["object_type"]])
-    return bbox_list
+def get_bbox(video_annotations, frame_number):
+    bbox_df = pd.DataFrame(columns=['object_id', 'bbox_lefttop_x', 'bbox_lefttop_y', 'bbox_width', 'bbox_height'])
+    video_df = video_annotations[video_annotations['current_frame'] == frame_number]
+    bbox_df['object_id'] = video_df['object_id']
+    bbox_df['bbox_lefttop_x'] = video_df['bbox_center_x'] - (video_df['bbox_width'] / 2)
+    bbox_df['bbox_lefttop_y'] = video_df['bbox_center_y'] - (video_df['bbox_height'] / 2)
+    bbox_df['bbox_width'] = video_df['bbox_width']
+    bbox_df['bbox_height'] = video_df['bbox_height']
+    return bbox_df
 
 def display_raw_video(video_path):
     # Displays video from path
@@ -36,7 +32,7 @@ def display_raw_video(video_path):
     capture.release()
     cv.destroyAllWindows()
 
-def display_annotated_video(video_path, annotations_df):
+def display_annotated_video(video_path, annotations_df, num_frames=1000):
     # Displays video from path along with provided annotations
     print("Displaying current video:", video_path)
     capture = cv.VideoCapture(video_path)       
@@ -44,8 +40,10 @@ def display_annotated_video(video_path, annotations_df):
         _, current_frame = capture.read()
         # Display current frame number
         current_frame_number = capture.get(cv.CAP_PROP_POS_FRAMES)
-        cv.putText(img=current_frame, text=str(current_frame_number), org=(50,50), fontFace=cv.FONT_HERSHEY_SIMPLEX, fontScale=1, color=(255,255,255), thickness=2)
+        if current_frame_number >= num_frames:
+            break
         
+        cv.putText(img=current_frame, text=str(current_frame_number), org=(50,50), fontFace=cv.FONT_HERSHEY_SIMPLEX, fontScale=1, color=(255,255,255), thickness=2)
         # Get bbox_list at current_frame
         bbox_list = get_bbox(annotations_df, current_frame_number)
         
@@ -73,6 +71,37 @@ def display_annotated_video(video_path, annotations_df):
     
     capture.release()
     cv.destroyAllWindows()
+
+def display_annotated_frame(video_path, video_annotations, frame_number):
+    capture = cv.VideoCapture(video_path)
+    
+    image_width = capture.get(cv.CAP_PROP_FRAME_WIDTH)
+    image_height = capture.get(cv.CAP_PROP_FRAME_HEIGHT)
+    
+    fig, ax = plt.subplots(figsize=(10,7))
+    ax.set(xlim=(0, image_width), ylim=(image_height, 0))
+    for _, bbox in get_bbox(video_annotations, frame_number).iterrows():
+        ax.add_patch(
+            matplotlib.patches.Rectangle(
+                (bbox['bbox_lefttop_x'], bbox['bbox_lefttop_y']), 
+                bbox['bbox_width'], 
+                bbox['bbox_height'], 
+                rotation_point='xy',
+                facecolor='none', 
+                ec='r', 
+                lw=1)
+        )
+    
+    while True:
+        success, current_frame = capture.read()
+        current_frame_number = capture.get(cv.CAP_PROP_POS_FRAMES)
+        if not success:
+            break
+        if current_frame_number != frame_number:
+            continue
+        ax.imshow(current_frame)
+        break
+    capture.release()
 
 def display_heatmap(frame, df):
     # Evaluate a gaussian kde on a regular grid of nbins x nbins over data extents
