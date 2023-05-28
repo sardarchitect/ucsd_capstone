@@ -5,14 +5,32 @@ import numpy as np
 from tqdm.auto import tqdm
 
 def get_dataset_directories():
-    # Returns tuple of paths to the VIRAT dataset directories
+    """
+    Get absolute paths to the VIRAT dataset directories
+
+    Keyword arguments:
+    None
+    
+    Return:
+    data_dir -- Parent data folder
+    annotation_dir -- Annotations folder
+    video_dir -- Raw videos folder
+    """
     data_dir = '/home/sardarchitect/repos/github.com/ucsd_capstone/virat/'
     annotation_dir = data_dir + 'annotations/'
     video_dir = data_dir + 'videos/'
     return data_dir, annotation_dir, video_dir
 
 def get_column_names(name):
-    # Returns column names for VIRAT dataset
+    """
+    Get column names for VIRAT dataset annotations
+
+    Keyword arguments:
+    name -- Type of annotation file
+
+    Return:
+    dict -- Dictionary of column names
+    """
     if name == "events_type":
         events_type = {
         1: "Person loading an Object to a Vehicle",
@@ -78,7 +96,17 @@ def get_column_names(name):
         print('Provide a valid column name')
 
 def get_dataset_df():
-    # Returns Pandas DataFrame containing VIRAT dataset video_names, paths, annotation files, and video duration
+    """
+    Get a Pandas DataFrame containtaing VIRAT dataset metadata
+    
+    Keyword Arguments:
+    None
+
+    Return:
+    videos_df -- Pandas DataFrame containing VIRAT dataset video_names, paths, annotation files, and video duration'
+    Creates a cache directory to store DataFrame in "pickle" format
+    Returns DataFrame from cache if cache directory found
+    """
     _, annotation_dir, video_dir = get_dataset_directories()
 
     # If DataFrame already exists, return DataFrame
@@ -123,13 +151,26 @@ def get_dataset_df():
     videos_df.to_pickle("./.data_cache/videos_df.pkl")    
     return videos_df
 
-def get_annotations_df(video_path, type='object', format='virat', normalize=True, object_id=False):
-    # Returns a dataframe of the specified annotation file of the specified video from the VIRAT dataset
+def get_annotations_df(video_path, type='object', format='virat', normalize=False, object_id=False):
+    """
+    Returns annotations for a specific video in the VIRAT dataset in a given format
+
+    Keyword Arguments:
+    video_path -- path to video
+    type -- annotation type to return (default "object")
+    format -- format of DataFrame to return ("virat", "yolo") (default "virat")
+    normalize -- returns coordinates normalized to image frame dimensions (default=False)
+    object_id -- returns object_id
+
+    Return:
+    annotation_df -- A Pandas DataFrame for the specified annotation file for the specified video from the VIRAT dataset
+    """
     _, annotation_dir, _ = get_dataset_directories()
     videos_df = get_dataset_df()
     
     # Find video in DataFrame
     video = videos_df.loc[videos_df['path'] == video_path]
+    
     if type=='object':
         # Find associated objects file
         annotation_df = pd.read_csv(annotation_dir + video['object_file'][0], delim_whitespace=True, header=None)
@@ -137,35 +178,58 @@ def get_annotations_df(video_path, type='object', format='virat', normalize=True
         objects_col = get_column_names('objects')
         annotation_df = annotation_df.rename(objects_col, axis=1)
         annotation_df = annotation_df[annotation_df['object_type'] == 1]
+    
     if format == 'yolo':
         return convert_virat_to_yolo(video, annotation_df, normalize=normalize, object_id=object_id)
     
     return annotation_df
 
-def convert_virat_to_yolo(video, annotation_df, normalize=True, object_id=False):
-    df = annotation_df.copy()
-    df['object_type'] = 0
+def convert_virat_to_yolo(video, annotation_df, normalize, object_id=False):
+    """
+    Converts default VIRAT DataFrame format to standard YOLO format
 
-    df['bbox_center_x'] = df['bbox_lefttop_x'] + (df['bbox_width'] / 2)
-    df['bbox_center_y'] = df['bbox_lefttop_y'] + (df['bbox_height'] / 2) 
+    Keyword Arguments:
+    video -- DataFrame containing standardized information of selected video
+    annotation_df -- DataFrame containing annotations in standard VIRAT format
+    normalize -- returns coordinates normalized to image frame dimensions (default=False) 
+    object_id -- returns object_id
+    
+    Return:
+    Pandas DataFrame containing VIRAT dataset annotations for a specified video in YOLO format
+    """
+    annotation_df = annotation_df.copy()
+    annotation_df['object_type'] = 0
+
+    annotation_df['bbox_center_x'] = annotation_df['bbox_lefttop_x'] + (annotation_df['bbox_width'] / 2)
+    annotation_df['bbox_center_y'] = annotation_df['bbox_lefttop_y'] + (annotation_df['bbox_height'] / 2) 
 
     if normalize:
         # Normalize to image size
-        df['bbox_center_x'] = round(df['bbox_center_x'] / video['image_width'][0], 3)
-        df['bbox_center_y'] = round(df['bbox_center_y'] / video['image_height'][0], 3)
-        df['bbox_width'] = (df['bbox_width'] / video['image_width'][0])
-        df['bbox_height'] = (df['bbox_height'] / video['image_height'][0])
+        annotation_df['bbox_center_x'] = round(annotation_df['bbox_center_x'] / video['image_width'][0], 3)
+        annotation_df['bbox_center_y'] = round(annotation_df['bbox_center_y'] / video['image_height'][0], 3)
+        annotation_df['bbox_width'] = (annotation_df['bbox_width'] / video['image_width'][0])
+        annotation_df['bbox_height'] = (annotation_df['bbox_height'] / video['image_height'][0])
 
     if object_id:
-        df.drop(['object_duration', 'bbox_lefttop_x', 'bbox_lefttop_y'], axis=1, inplace=True)
-        df = df[['current_frame', 'object_id', 'object_type', 'bbox_center_x', 'bbox_center_y', 'bbox_width', 'bbox_height']]
+        annotation_df.drop(['object_duration', 'bbox_lefttop_x', 'bbox_lefttop_y'], axis=1, inplace=True)
+        annotation_df = annotation_df[['current_frame', 'object_id', 'object_type', 'bbox_center_x', 'bbox_center_y', 'bbox_width', 'bbox_height']]
     else:
-        df.drop(['object_id', 'object_duration', 'bbox_lefttop_x', 'bbox_lefttop_y'], axis=1, inplace=True)
-        df = df[['current_frame', 'object_type', 'bbox_center_x', 'bbox_center_y', 'bbox_width', 'bbox_height']]
-    return df
+        annotation_df.drop(['object_id', 'object_duration', 'bbox_lefttop_x', 'bbox_lefttop_y'], axis=1, inplace=True)
+        annotation_df = annotation_df[['current_frame', 'object_type', 'bbox_center_x', 'bbox_center_y', 'bbox_width', 'bbox_height']]
+    return annotation_df
 
 def build_virat_to_yolo_directory(video, annotation_df, save_dir):
-    # Converts VIRAT dataset to YOLO-specific folder structure
+    """
+    Builds a standardized YOLO directory for the VIRAT dataset at a specified location
+
+    Keyword Arguments:
+    video -- DataFrame containing standardized information of selected video
+    annotation_df -- Pandas DataFrame of annotations for specific video in YOLO format
+    save_dir -- path to directory
+
+    Return:
+    None
+    """
     if not os.path.exists(f'{save_dir}/labels'):
             os.mkdir(f'{save_dir}/labels')
     
@@ -175,12 +239,12 @@ def build_virat_to_yolo_directory(video, annotation_df, save_dir):
     capture = cv.VideoCapture(video.path)
     
     for count in tqdm(range(video['num_frames'])):
+        # Extract frames if and only if they contain annotations to save space
         if count not in annotation_df['current_frame'].unique():
-            continue    
-        # Extract frame
+            continue
         success, image = capture.read()
         if not success:
-            print('Something went wrong')
+            print('Something went wrong while extracting video frames')
             break
         cv.imwrite(f"{save_dir}/images/{video.name}_{count}.jpg", image)
 
