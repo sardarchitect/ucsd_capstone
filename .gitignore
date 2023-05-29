@@ -6,3 +6,5 @@ __pycache__
 /ultralytics
 yolov5/
 ByteTrack/
+.cometml-runs/
+yolov5s.pt
