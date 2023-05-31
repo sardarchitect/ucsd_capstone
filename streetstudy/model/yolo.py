@@ -3,6 +3,7 @@ import cv2 as cv
 import torch 
 from tqdm import tqdm
 import pandas as pd
+import streamlit as st
 
 def yolov5(model='yolov5s', conf=0.25, path=None):
     """
@@ -21,13 +22,14 @@ def yolov5(model='yolov5s', conf=0.25, path=None):
     model.classes = [0] # Detect "Person" class only
     return model
 
-def predict_video(model, video_path, is_df=False):
+def predict_video(model, video_path, is_df=False, is_streamlit=False):
     """
     Get annotations from a video using specified model
 
     model -- YOLOv5 model for inference
     video_path -- path to video
     is_df -- flag to return as Pandas DataFrame if True (default False)
+    is_streamlit -- flag to return loading bar progress if True (default False)
 
     Return: Model predictions as PyTorch tensors (or Pandas DataFrame if is_df==True)
     Column names:
@@ -39,15 +41,22 @@ def predict_video(model, video_path, is_df=False):
         5: conf
         6: class (0 is person class)
     """
+    
     capture = cv.VideoCapture(video_path)
     annotations = torch.empty((0, 7), device='cuda')
     total_frame_number = int(capture.get(cv.CAP_PROP_FRAME_COUNT))
+    if is_streamlit:
+        loading_bar_text = "Inference in progress. Please wait."
+        loading_bar = st.progress(0, text=loading_bar_text)
     for current_frame_number in tqdm(range(total_frame_number)):
         _, frame = capture.read()
         results = model(frame)
         current_frame_number_col = torch.ones((results.xywh[0].shape[0]), device='cuda') * current_frame_number
         list_of_preds = torch.column_stack((current_frame_number_col, results.xywh[0]))
         annotations = torch.row_stack((annotations, list_of_preds))
+        
+        if is_streamlit:
+            loading_bar.progress(current_frame_number/total_frame_number, text=loading_bar_text)
     capture.release()
     if is_df:
         annotations_df = pd.DataFrame(data=annotations.cpu().numpy(), columns=['current_frame', 'bbox_center_x', 'bbox_center_y', 'bbox_width', 'bbox_height', 'conf', 'class'])
