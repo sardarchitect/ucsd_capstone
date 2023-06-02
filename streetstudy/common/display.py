@@ -88,7 +88,7 @@ def display_annotated_frame(video_path, annotations_df, frame):
         break
     capture.release()
 
-def display_heatmap(annotations_df, frame, fig=None, ax=None):
+def display_heatmap(annotations_df, frame, fig=None, ax=None, save_path=None):
     """
     Evaluate a gaussian kde on a regular grid of nbins x nbins over data extents
 
@@ -105,6 +105,17 @@ def display_heatmap(annotations_df, frame, fig=None, ax=None):
     feet_y = annotations_df['bbox_center_y'] + (annotations_df['bbox_height'] / 2)
 
     sns.kdeplot(x=feet_x, y=feet_y, thresh=0, levels=50, alpha=0.2, fill=True, ax=ax, cmap='hot')
+    ax.set_axis_off()
+    
+    fig.set_dpi(300)
+    fig.set_figheight(15)
+    fig.set_figwidth(35)
+
     fig.gca().invert_yaxis()
     ax.imshow(frame)
-    return fig
+    
+    if save_path:
+        fig.savefig(save_path)
+        plt.close()
+        return 1
+    return ax

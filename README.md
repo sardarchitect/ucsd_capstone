@@ -1,3 +1,18 @@
+# TODO
+- `setuptools`
+
+## Quickstart/Setup
+- all the reqs, dependencies, 
+
+## Usage
+
+## Training
+
+## Fine-tuning
+
+## Examples
+
+
 # UCSD Capstone Project Proposal
 ## Problem statement
 As urban areas become increasingly populated, architects and planners face the challenge of designing spaces that can accommodate high volumes of foot traffic. Furthermore, urban spaces are used in ways usually not intended by the designers. For instance, pedestrians may choose a shortcut through the grass rather than following the paved pathway provided by the designer if it is more efficient. 
@@ -47,4 +62,3 @@ The development of this model will involve leveraging state-of-the-art algorithm
 Data collection and preprocessing will be done using publicly available datasets such as VIRAT, CityPersons, MOT Challenge, DukeMTMC, and ETHZ Pedestrian. Multiple state-of-the-art models will be tested and evaluated using metrics such as average precision and accuracy.
 
 Overall, the proposed computer vision model has the potential to revolutionize the way we design and plan urban areas, by providing granular insights on foot traffic patterns that can be used to optimize the environment for pedestrian needs, while promoting biodiversity and human well-being.
-

@@ -63,7 +63,7 @@ dash_row1col1, dash_row1col2 = st.columns(2)
 dash_row1col1.subheader('Footpath Density')
 dash_row1col1.radio('Filter by', options=["Objects","Events"], key="activity")
 dash_row1col2.subheader('Activity Map')
-
+dash_row1col2.selectbox('Filter by', options=["obj_1","obj_2", "obj_3", "obj_4"])
 
 dash_row2col1, dash_row2col2 = st.columns(2)
 dash_row2col1.subheader('Direction of Travel')

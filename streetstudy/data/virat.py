@@ -1,8 +1,11 @@
+import logging #todo
+from typing import Optional as O
 import os
 import cv2 as cv
 import pandas as pd
 import numpy as np
 from tqdm.auto import tqdm
+
 
 def get_dataset_directories():
     """
@@ -178,13 +181,23 @@ def get_annotations_df(video_path, type='object', format='virat', normalize=Fals
         objects_col = get_column_names('objects')
         annotation_df = annotation_df.rename(objects_col, axis=1)
         annotation_df = annotation_df[annotation_df['object_type'] == 1]
+
+    if type=='events':
+        # Find associated objects file
+        annotation_df = pd.read_csv(annotation_dir + video['event_file'][0], delim_whitespace=True, header=None)
+        # Rename columns
+        events_col = get_column_names('events')
+        annotation_df = annotation_df.rename(events_col, axis=1)
+        annotation_df['bbox_center_x'] = annotation_df['bbox_lefttop_x'] + (annotation_df['bbox_width'] / 2)
+        annotation_df['bbox_center_y'] = annotation_df['bbox_lefttop_y'] + (annotation_df['bbox_height'] / 2)
+        # annotation_df = annotation_df[annotation_df['event_type'] == 1]
     
     if format == 'yolo':
         return convert_virat_to_yolo(video, annotation_df, normalize=normalize, object_id=object_id)
     
     return annotation_df
 
-def convert_virat_to_yolo(video, annotation_df, normalize, object_id=False):
+def convert_virat_to_yolo(video:pd.DataFrame, annotation_df:pd.DataFrame, normalize:bool, object_id:O[bool]=False) -> pd.DataFrame:
     """
     Converts default VIRAT DataFrame format to standard YOLO format
 
@@ -216,6 +229,7 @@ def convert_virat_to_yolo(video, annotation_df, normalize, object_id=False):
     else:
         annotation_df.drop(['object_id', 'object_duration', 'bbox_lefttop_x', 'bbox_lefttop_y'], axis=1, inplace=True)
         annotation_df = annotation_df[['current_frame', 'object_type', 'bbox_center_x', 'bbox_center_y', 'bbox_width', 'bbox_height']]
+        
     return annotation_df
 
 def build_virat_to_yolo_directory(video, annotation_df, save_dir):
