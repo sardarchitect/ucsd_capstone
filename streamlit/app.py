@@ -10,6 +10,10 @@ st.divider()
 uploaded_file = st.file_uploader(label='Upload a video to perform analysis')
 if st.button('Start'):
     inference.pipeline(uploaded_file)
+    
+    # DASHBOARD
+    st.video("./outputs/bbox/output.mp4")
+    st.video("./outputs/heatmap/output.mp4")
 st.divider()
 
 # SUMMARY
@@ -23,3 +27,6 @@ st.subheader("Usage")
 st.markdown("1. Upload a .mp4 video (maximum 500mb in size) \
             \n 2. Press start \
             \n 3. The model results will be displayed below")
+
+# CITATIONS 
+st.subheader("Citations")
