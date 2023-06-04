@@ -19,7 +19,7 @@ def get_dataset_directories():
     annotation_dir -- Annotations folder
     video_dir -- Raw videos folder
     """
-    data_dir = '/home/sardarchitect/repos/github.com/ucsd_capstone/virat/'
+    data_dir = '/home/sardarchitect/datasets/virat/'
     annotation_dir = data_dir + 'annotations/'
     video_dir = data_dir + 'videos/'
     return data_dir, annotation_dir, video_dir

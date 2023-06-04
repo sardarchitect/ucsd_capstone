@@ -8,13 +8,13 @@
             "name": "Python: Any_Name",
             "type": "python",
             "request": "launch",
-            "program": "${workspaceFolder}/streetstudy/main.py",
-            "console": "integratedTerminal",
-            "justMyCode": true,
+            "cwd": "${fileDirname}",
+            "module": "streamlit",
             "args": [
-                "-p", "/home/sardarchitect/repos/github.com/ucsd_capstone/.data_cache/virat/videos/VIRAT_S_000002.mp4",
-                "-inf",
-            ]
+                "run", "app.py"
+            ],
+            "env": {"PYTHONPATH": "${workspaceFolder}/"}
+
         }
     ]
 }

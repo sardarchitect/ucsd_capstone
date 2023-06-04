@@ -5,7 +5,6 @@ import cv2 as cv
 import seaborn as sns
 import pandas as pd
 
-
 def display_raw_video(video_path):
     """
     Displays unannotated (raw) video on default media player
