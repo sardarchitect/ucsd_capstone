@@ -3,6 +3,9 @@ import cv2 as cv
 import torch 
 from tqdm import tqdm
 import pandas as pd
+from sort.sort import Sort
+import streamlit as st
+import numpy as np
 
 def yolov5(model='yolov5s', conf=0.25, path=None):
     """
@@ -56,3 +59,32 @@ def predict_video(model, video_path, is_df=False):
         annotations_df = pd.DataFrame(data=annotations.cpu().numpy(), columns=['current_frame', 'bbox_center_x', 'bbox_center_y', 'bbox_width', 'bbox_height', 'conf', 'class'])
         return annotations_df
     return annotations
+
+def st_predict(video_dict):
+    loading_bar_text = "Inference in progress. Please wait."
+    loading_bar = st.progress(0, text=loading_bar_text)
+    # Init model
+    model = yolov5()
+
+    #Store annotations
+    preds_list = np.empty((0, 6))
+    # Init tracker
+    sort = Sort(max_age=5, min_hits=3, iou_threshold=0.2)
+    # Init video loop
+    capture = cv.VideoCapture(video_dict['path'])
+    while True:
+        current_frame_number = int(capture.get(cv.CAP_PROP_POS_FRAMES))
+        success, frame = capture.read()
+        if not success:
+            break
+    
+        # Predict
+        predictions = model(frame).xyxy[0]
+        tracked_predictions = sort.update(predictions[:, :4].cpu().numpy())
+        current_frame_number_np = np.ones((tracked_predictions.shape[0], 1)) * current_frame_number
+        tracked_predictions = np.hstack((current_frame_number_np, tracked_predictions))
+        preds_list = np.vstack((preds_list, tracked_predictions))    
+        loading_bar.progress(current_frame_number/video_dict["length"], text=loading_bar_text)
+    loading_bar.empty()
+    capture.release()
+    return preds_list
