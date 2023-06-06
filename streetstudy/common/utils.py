@@ -1,3 +1,4 @@
+import os
 import subprocess
 
 def generate_video(folder):
@@ -9,3 +10,7 @@ def generate_video(folder):
     f'{folder}/output.mp4'
     ])
     return
+
+def make_dir(path):
+    if not os.path.exists(path):
+        os.mkdir(path)

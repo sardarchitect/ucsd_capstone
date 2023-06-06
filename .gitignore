@@ -1,12 +1,7 @@
-.ipynb_checkpoints
-__pycache__
+# FOLDERS
+.ipynb_checkpoints/
+__pycache__/
+.data_cache/
 
-.data_cache
-/virat/
-/ultralytics
-yolov5/
-ByteTrack/
-.cometml-runs/
-yolov5s.pt
-/sort/
-.cache
+# FILES
+*/yolov5s.pt
