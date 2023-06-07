@@ -1,3 +1,4 @@
+import os
 import streamlit as st
 import state
 import postprocess
@@ -18,19 +19,29 @@ def sidebar():
                     \n 2. Press start \
                     \n 3. The model results will be displayed below")
         uploaded_file = st.file_uploader(label='Upload a video to perform analysis')
-        st.button(label=('Run' if st.session_state['is_run'] == False else "Stop"), on_click=state.set_run)
+        st.button(label=('Run' if st.session_state['is_run'] == False else "Stop"), args=[uploaded_file], on_click=state.set_run)
         # CITATIONS 
         st.subheader("Citations")
         return uploaded_file
 
-def dashboard_form():
-    with st.form("my_form"):
-        st.write("Customize Output")
-        frame_number = st.slider("slider_frame_number")
-        plot_type = st.radio("radio_plot_type", options=["heatmap", "bounding_boxes", "directional_arrows"])
+def dashboard():
+    with st.form("dashboard_form"):
+        form_col_1, form_col_2 = st.columns(2)
+        st.write("Analysis Options")
+        with form_col_1:
+            display_type = st.radio("Display Type", options=["video", "interactive_plot"])
+        with form_col_2:
+            analysis_type = st.radio("Analysis Type", options=["heatmap", "bounding_boxes", "directional_arrows"])
 
         # Every form must have a submit button.
-        submitted = st.form_submit_button("Submit")
+        submitted = st.form_submit_button("Render")
         if submitted:
-            postprocess.show_plot(frame_number)
-        
+            st.session_state["is_plot"] = True
+            st.session_state["display_type"] = display_type
+            st.session_state["analysis_type"] = analysis_type
+
+def plot(save_path):
+    if st.session_state["display_type"] == "video":
+        st.video(os.path.join(save_path, st.session_state["analysis_type"], "output.mp4"))
+    if st.session_state["display_type"] == "interactive_plot":
+        postprocess.show_plot(50)

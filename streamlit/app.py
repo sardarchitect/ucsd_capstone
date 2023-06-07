@@ -8,9 +8,9 @@ import plotly as plt
 
 from streetstudy.common import utils
 
+# CONFIG
 save_path = '.data_cache/'
 utils.make_dir(save_path)
-
 st.set_page_config(
     page_title="StreetStudy",
     page_icon="🏙️",
@@ -21,29 +21,24 @@ st.set_page_config(
         'About': "# This is a header. This is an *extremely* cool app!"
     }
 )
-
-# INITIALIZE
 state.initialize()
-    
+
 # HEADER
 ui_modules.header()
-
 # SIDEBAR
 uploaded_file = ui_modules.sidebar()
-
 # DASHBOARD
 if st.session_state['is_run'] == True:
-    ui_modules.dashboard_form()
+    #TODO: save preds to cache for faster loading
+    if st.session_state['have_video_dict'] == False:
+        video_dict = compute.video_metadata(uploaded_file)
     
-    video_dict = compute.video_metadata(uploaded_file)
-    preds = compute.predict(video_dict, save_path)
-    compute.postprocess_videos(video_dict, preds, save_path)
+    if st.session_state['have_preds'] == False:
+        preds = compute.predict(video_dict)
 
-    st.video(os.path.join(save_path,"bbox/output.mp4"))
-    dash_col_1, dash_col_2 = st.columns(2)
-    with dash_col_1:
-        st.subheader("Pedestrian Density")
-        st.video(os.path.join(save_path,"heatmap/output.mp4"))
-    with dash_col_2:
-        st.subheader("Pedestrian Flow")
-        st.video(os.path.join(save_path,"arrows/output.mp4"))
+    if st.session_state['have_preprocessed'] == False:
+        compute.postprocess_videos(video_dict, preds, save_path)
+
+    if st.session_state['is_plot'] == True:
+        ui_modules.plot(save_path)
+    ui_modules.dashboard()

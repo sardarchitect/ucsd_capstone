@@ -3,6 +3,7 @@ import matplotlib.patches
 import seaborn as sns
 import streamlit as st
 import plotly as plty
+import plotly.express as plty_exp
 import numpy as np
 
 def heatmap(ax, preds, current_frame_number):
@@ -47,5 +48,6 @@ def directional_arrows(ax, preds, current_frame_number):
 
 def show_plot(pix):
     img_rgb = np.random.randint(low=0, high=255, size=(pix, pix))
-    fig = plty.express.imshow(img_rgb)
+    fig = plty_exp.imshow(img_rgb)
+    fig.add_annotation(text=st.session_state["display_type"], showarrow=False, x=-1, y=-1)
     st.plotly_chart(fig)
