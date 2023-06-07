@@ -34,14 +34,14 @@ def dashboard():
             analysis_type = st.radio("Analysis Type", options=["heatmap", "bounding_boxes", "directional_arrows"])
 
         # Every form must have a submit button.
-        submitted = st.form_submit_button("Render")
-        if submitted:
-            st.session_state["is_plot"] = True
+        
+        if st.form_submit_button("Render"):
             st.session_state["display_type"] = display_type
             st.session_state["analysis_type"] = analysis_type
+        plot()
 
-def plot(save_path):
+def plot():
     if st.session_state["display_type"] == "video":
-        st.video(os.path.join(save_path, st.session_state["analysis_type"], "output.mp4"))
+        st.video(os.path.join(st.session_state["save_path"], st.session_state["analysis_type"], "output.mp4"))
     if st.session_state["display_type"] == "interactive_plot":
         postprocess.show_plot(50)

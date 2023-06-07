@@ -27,7 +27,7 @@ def video_metadata(uploaded_file):
     return video_dict
 
 def predict(video_dict):    
-    loading_bar_text = "Inference in progress. Please wait."
+    loading_bar_text = "Inference in progress. This may take a couple minutes. Please wait."
     loading_bar = st.progress(0, text=loading_bar_text)
     # Init model
     model = yolo.yolov5()
@@ -56,12 +56,12 @@ def predict(video_dict):
     st.session_state["have_preds"] = True
     return preds_list
 
-def postprocess_videos(video_dict, preds, save_path, SKIP=50):
+def postprocess_videos(video_dict, preds, SKIP=50):
     postprocess_list = ["heatmap", "bounding_boxes", "directional_arrows"]
     for path in postprocess_list:
-        utils.make_dir(os.path.join(save_path, path))
+        utils.make_dir(os.path.join(st.session_state["save_path"], path))
 
-    loading_bar_text = "Postprocessing in progress. Please wait."
+    loading_bar_text = "Postprocessing in progress. This may take a couple minutes. Please wait."
     loading_bar = st.progress(0, text=loading_bar_text)
     valid_frames = [x for x in range(0, video_dict['length'], SKIP)]
     
@@ -84,13 +84,13 @@ def postprocess_videos(video_dict, preds, save_path, SKIP=50):
             if item == "directional_arrows":
                 postprocess.directional_arrows(ax, preds, current_frame_number)
             ax.imshow(cv.cvtColor(frame, cv.COLOR_BGR2RGB))
-            fig.savefig(os.path.join(save_path, item, video_dict['path'][-6:] + str(current_frame_number)))
+            fig.savefig(os.path.join(st.session_state["save_path"], item, video_dict['path'][-6:] + "_" + str(current_frame_number)))
             plt.close()
             
         loading_bar.progress(current_frame_number/video_dict["length"], text=loading_bar_text)
     
-    for folder in os.listdir(save_path):
-        utils.generate_video(os.path.join(save_path, folder))
+    for folder in os.listdir(st.session_state["save_path"]):
+        utils.generate_video(os.path.join(st.session_state["save_path"], folder))
     
     loading_bar.empty()
     capture.release()

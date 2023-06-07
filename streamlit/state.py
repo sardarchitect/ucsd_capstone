@@ -1,7 +1,14 @@
+from streetstudy.common import utils 
 import streamlit as st
+import shutil
 
 def initialize():
     print("Running initalize")
+    if "save_path" not in st.session_state:
+        st.session_state["save_path"] = '.data_cache/'
+        shutil.rmtree(st.session_state["save_path"])
+        utils.make_dir(st.session_state["save_path"])
+
     if 'is_run' not in st.session_state:
         st.session_state['is_run'] = False
 
@@ -9,10 +16,10 @@ def initialize():
         st.session_state['is_plot'] = False
 
     if 'display_type' not in st.session_state:
-        st.session_state["display_type"] = "Video"
+        st.session_state["display_type"] = "video"
     
     if 'analysis_type' not in st.session_state:
-        st.session_state["analysis_type"] = "Bounding Boxes"
+        st.session_state["analysis_type"] = "bounding_boxes"
 
     if 'have_video_dict' not in st.session_state:
         st.session_state["have_video_dict"] = False
