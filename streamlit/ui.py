@@ -2,6 +2,7 @@ import os
 import streamlit as st
 import state
 import postprocess
+import streamlit_elements
 
 def header():
     st.title("🚶🏽‍♀️🚶🚶🏿‍♀️ StreetStudy 🚶🏿‍♂️🚶🏼‍♀️🚶🏽")
@@ -11,6 +12,7 @@ def header():
              choose a shortcut through the grass rather than following the paved pathway provided by the designer if it is more efficient.\
              The unique ways in which people may use public spaces is usually not understood well by the designers.")
     st.divider()
+    
     
 def sidebar():
     with st.sidebar:
@@ -24,24 +26,28 @@ def sidebar():
         st.subheader("Citations")
         return uploaded_file
 
-def dashboard():
-    with st.form("dashboard_form"):
-        form_col_1, form_col_2 = st.columns(2)
-        st.write("Analysis Options")
-        with form_col_1:
-            display_type = st.radio("Display Type", options=["video", "interactive_plot"])
-        with form_col_2:
-            analysis_type = st.radio("Analysis Type", options=["heatmap", "bounding_boxes", "directional_arrows"])
-
-        # Every form must have a submit button.
+def analysis_dashboard():
+    dash_c1, dash_c2 = st.columns([3, 1])
+    
+    with dash_c1:
+        if st.session_state["display_type"] == "video":
+            st.video(os.path.join(st.session_state["save_path"], st.session_state["analysis_type"], "output.mp4"))
+        if st.session_state["display_type"] == "interactive_plot":
+            postprocess.show_plot(50)
+        met_c1, met_c2 = st.columns([3,1])
+        with met_c1:
+            st.subheader("Dwell Times")
+            postprocess.plot_dwell()
+        with met_c2:
+            st.metric(label="Pedestrian Count", value=12)
+            st.metric(label="Pedestrian Count", value=35)
+            st.metric(label="Pedestrian Count", value=98)
         
-        if st.form_submit_button("Render"):
-            st.session_state["display_type"] = display_type
-            st.session_state["analysis_type"] = analysis_type
-        plot()
-
-def plot():
-    if st.session_state["display_type"] == "video":
-        st.video(os.path.join(st.session_state["save_path"], st.session_state["analysis_type"], "output.mp4"))
-    if st.session_state["display_type"] == "interactive_plot":
-        postprocess.show_plot(50)
+    with dash_c2:
+        st.subheader("Analysis Options")
+        with st.form("dashboard_form"):
+            display_type = st.radio("Display Type", options=["video", "interactive_plot"])
+            analysis_type = st.radio("Analysis Type", options=["heatmap", "bounding_boxes", "directional_arrows"])            
+            if st.form_submit_button("Render"):
+                st.session_state["display_type"] = display_type
+                st.session_state["analysis_type"] = analysis_type

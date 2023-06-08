@@ -11,6 +11,7 @@ from streetstudy.common import utils
 import numpy as np
 from sort.sort import Sort
 
+
 def video_metadata(uploaded_file):
     tfile = tempfile.NamedTemporaryFile(delete=False)
     tfile.write(uploaded_file.read())

@@ -34,4 +34,4 @@ if st.session_state['is_run'] == True:
     if st.session_state['have_preprocessed'] == False:
         compute.postprocess_videos(video_dict, preds)
 
-    ui.dashboard()
+    ui.analysis_dashboard()

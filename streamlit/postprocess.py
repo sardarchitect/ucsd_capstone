@@ -51,3 +51,9 @@ def show_plot(pix):
     fig = plty_exp.imshow(img_rgb)
     fig.add_annotation(text=st.session_state["display_type"], showarrow=False, x=-1, y=-1)
     st.plotly_chart(fig)
+
+def plot_dwell():
+    x = np.arange(start=0, stop=100, step=0.5)
+    y = np.sin(x)
+    fig = plty_exp.line(x=x,y=y, height=300)
+    st.plotly_chart(fig, use_container_width=True)
