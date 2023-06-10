@@ -7,19 +7,18 @@ import streamlit_elements
 def header():
     st.title("🚶🏽‍♀️🚶🚶🏿‍♀️ StreetStudy 🚶🏿‍♂️🚶🏼‍♀️🚶🏽")
     st.subheader("Analyze Pedestrian Traffic Using YOLOv5")
-    st.markdown("As urban areas become increasingly populated, architects and planners face the challenge of designing spaces that can accommodate high\
-             volumes of foot traffic. Furthermore, urban spaces are used in ways usually not intended by the designers. For instance, pedestrians may\
-             choose a shortcut through the grass rather than following the paved pathway provided by the designer if it is more efficient.\
-             The unique ways in which people may use public spaces is usually not understood well by the designers.")
+    st.markdown("Thank you for checking out StreetStudy! The goal of this project is to allow urban designers and planners to analyze \
+                outdoor pedestrian foot traffic patterns and behaviors in the hopes to help optimize public spaces for pedestrian needs.\
+                The app aims to provide desingers granular insights to create more pedestrian-friendly, accessible, and sustainable urban areas")
     st.divider()
-    
-    
+
 def sidebar():
     with st.sidebar:
         st.subheader("Usage")
-        st.markdown("1. Upload a .mp4 video (maximum 500mb in size) \
-                    \n 2. Press start \
-                    \n 3. The model results will be displayed below")
+        st.markdown("1. Upload a .mp4 video (maximum 500mb in size) \n\
+                    2. Press start \n\
+                    3. The model results will be displayed below")
+        
         uploaded_file = st.file_uploader(label='Upload a video to perform analysis')
         st.button(label=('Run' if st.session_state['is_run'] == False else "Stop"), args=[uploaded_file], on_click=state.set_run)
         # CITATIONS 
@@ -28,7 +27,6 @@ def sidebar():
 
 def analysis_dashboard():
     dash_c1, dash_c2 = st.columns([3, 1])
-    
     with dash_c1:
         if st.session_state["display_type"] == "video":
             st.video(os.path.join(st.session_state["save_path"], st.session_state["analysis_type"], "output.mp4"))

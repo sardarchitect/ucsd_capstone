@@ -4,35 +4,30 @@ import tempfile
 import matplotlib.pyplot as plt
 import cv2 as cv
 import streamlit as st
+import plotly as plty
+import plotly.express as plty_exp
+import numpy as np
 
-import postprocess
+
 from streetstudy.model import yolo
 from streetstudy.common import utils
+from streetstudy.common import postprocess
 import numpy as np
 from sort.sort import Sort
 
-
-def video_metadata(uploaded_file):
+def get_video_metadata(uploaded_file):
     tfile = tempfile.NamedTemporaryFile(delete=False)
     tfile.write(uploaded_file.read())
-    # Video metadata capture
-    video_dict = {}
-    capture = cv.VideoCapture(tfile.name)
-    video_dict["path"] = tfile.name
-    video_dict["fps"] = capture.get(cv.CAP_PROP_FPS)
-    video_dict["length"] = int(capture.get(cv.CAP_PROP_FRAME_COUNT))
-    video_dict["height"] = int(capture.get(cv.CAP_PROP_FRAME_HEIGHT))
-    video_dict["width"] = int(capture.get(cv.CAP_PROP_FRAME_WIDTH))
-    capture.release()
+    video_dict = utils.get_video_metadata(tfile.name)
     st.session_state["have_video_dict"] = True
     return video_dict
 
-def predict(video_dict):    
+def predict(video_dict):
     loading_bar_text = "Inference in progress. This may take a couple minutes. Please wait."
     loading_bar = st.progress(0, text=loading_bar_text)
     # Init model
     model = yolo.yolov5()
-
+    
     #Store annotations
     preds_list = np.empty((0, 6))
     # Init tracker
@@ -52,8 +47,10 @@ def predict(video_dict):
         tracked_predictions = np.hstack((current_frame_number_np, tracked_predictions))
         preds_list = np.vstack((preds_list, tracked_predictions))    
         loading_bar.progress(current_frame_number/video_dict["length"], text=loading_bar_text)
+
     loading_bar.empty()
     capture.release()
+
     st.session_state["have_preds"] = True
     return preds_list
 
@@ -78,12 +75,16 @@ def postprocess_videos(video_dict, preds, SKIP=50):
         for item in postprocess_list:
             fig, ax = plt.subplots()
             ax.set(xlim=(0, video_dict['width']), ylim=(video_dict['height'], 0))    
+            ax.set_axis_off()
+            ax.set_facecolor("b")
+
             if item == "heatmap":
                 postprocess.heatmap(ax, preds, current_frame_number)
             if item == "bounding_boxes":
                 postprocess.bounding_boxes(ax, preds, current_frame_number)
             if item == "directional_arrows":
                 postprocess.directional_arrows(ax, preds, current_frame_number)
+            
             ax.imshow(cv.cvtColor(frame, cv.COLOR_BGR2RGB))
             fig.savefig(os.path.join(st.session_state["save_path"], item, video_dict['path'][-6:] + "_" + str(current_frame_number)))
             plt.close()
@@ -98,4 +99,14 @@ def postprocess_videos(video_dict, preds, SKIP=50):
     st.session_state["have_preprocessed"] = True
     st.session_state["is_plot"] = True
     
-    
+def show_plot(pix):
+    img_rgb = np.random.randint(low=0, high=255, size=(pix, pix))
+    fig = plty_exp.imshow(img_rgb)
+    fig.add_annotation(text=st.session_state["display_type"], showarrow=False, x=-1, y=-1)
+    st.plotly_chart(fig)
+
+def plot_dwell():
+    x = np.arange(start=0, stop=100, step=0.5)
+    y = np.sin(x)
+    fig = plty_exp.line(x=x,y=y, height=300)
+    st.plotly_chart(fig, use_container_width=True)

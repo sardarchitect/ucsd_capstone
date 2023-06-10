@@ -4,7 +4,6 @@ import cv2 as cv
 import matplotlib.patches
 import seaborn as sns
 import numpy as np
-
 import seaborn as sns
 import pandas as pd
 
@@ -121,3 +120,4 @@ def display_heatmap(annotations_df, frame, fig=None, ax=None, save_path=None):
         plt.close()
         return 1
     return ax
+
