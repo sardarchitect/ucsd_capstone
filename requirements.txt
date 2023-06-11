@@ -1,3 +1,4 @@
+pip-upgrader
 numpy
 streamlit==1.22.0
 tqdm==4.65.0
