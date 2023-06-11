@@ -22,16 +22,17 @@ state.initialize()
 ui.header()
 # SIDEBAR
 uploaded_file = ui.sidebar()
+
 # DASHBOARD
 if st.session_state['is_run'] == True:
     #TODO: save preds to cache for faster loading
-    if st.session_state['have_video_dict'] == False:
-        video_dict = compute.video_metadata(uploaded_file)
+    if st.session_state['cache_video_dict'] == False:
+        video_dict = compute.get_video_metadata(uploaded_file)
     
-    if st.session_state['have_preds'] == False:
+    if st.session_state['cache_preds'] == False:
         preds = compute.predict(video_dict)
 
-    if st.session_state['have_preprocessed'] == False:
+    if st.session_state['cache_postprocess'] == False:
         compute.postprocess_videos(video_dict, preds)
 
     ui.analysis_dashboard()

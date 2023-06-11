@@ -19,7 +19,8 @@ def get_dataset_directories():
     annotation_dir -- Annotations folder
     video_dir -- Raw videos folder
     """
-    data_dir = '/home/sardarchitect/datasets/virat/'
+    # data_dir = '/home/sardarchitect/datasets/virat/'
+    data_dir = '/mnt/d/data/virat/'
     annotation_dir = data_dir + 'annotations/'
     video_dir = data_dir + 'videos/'
     return data_dir, annotation_dir, video_dir
@@ -188,8 +189,8 @@ def get_annotations_df(video_path, type='object', format='virat', normalize=Fals
         # Rename columns
         events_col = get_column_names('events')
         annotation_df = annotation_df.rename(events_col, axis=1)
-        annotation_df['bbox_center_x'] = annotation_df['bbox_lefttop_x'] + (annotation_df['bbox_width'] / 2)
-        annotation_df['bbox_center_y'] = annotation_df['bbox_lefttop_y'] + (annotation_df['bbox_height'] / 2)
+        annotation_df['bbox_rightbottom_x'] = annotation_df['bbox_lefttop_x'] + annotation_df['bbox_width']
+        annotation_df['bbox_rightbottom_y'] = annotation_df['bbox_lefttop_y'] + annotation_df['bbox_height']
         # annotation_df = annotation_df[annotation_df['event_type'] == 1]
     
     if format == 'yolo':

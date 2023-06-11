@@ -120,4 +120,3 @@ def display_heatmap(annotations_df, frame, fig=None, ax=None, save_path=None):
         plt.close()
         return 1
     return ax
-

@@ -21,14 +21,14 @@ def initialize():
     if 'analysis_type' not in st.session_state:
         st.session_state["analysis_type"] = "bounding_boxes"
 
-    if 'have_video_dict' not in st.session_state:
-        st.session_state["have_video_dict"] = False
+    if 'cache_video_dict' not in st.session_state:
+        st.session_state["cache_video_dict"] = False
 
-    if 'have_preds' not in st.session_state:
-        st.session_state["have_preds"] = False
+    if 'cache_preds' not in st.session_state:
+        st.session_state["cache_preds"] = False
 
-    if 'have_preprocessed' not in st.session_state:
-        st.session_state["have_preprocessed"] = False
+    if 'cache_postprocess' not in st.session_state:
+        st.session_state["cache_postprocess"] = False
 
 def set_run(uploaded_file):
     if uploaded_file is None or uploaded_file.name[-3:] != "mp4":
@@ -36,7 +36,7 @@ def set_run(uploaded_file):
         st.error("Please upload a valid .mp4 file")
         st.session_state['is_run'] == False
     else:
-        st.session_state["have_video_dict"] = False
-        st.session_state["have_preds"] = False
-        st.session_state["have_preprocessed"] = False
+        st.session_state["cache_video_dict"] = False
+        st.session_state["cache_preds"] = False
+        st.session_state["cache_postprocess"] = False
         st.session_state['is_run'] = not(st.session_state['is_run'])

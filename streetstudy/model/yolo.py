@@ -19,7 +19,7 @@ class YoloModel():
         self.model.conf = conf
         self.model.classes = [0] # Detect "Person" class only
         self.predictions = np.empty((0, 6))
-        self.tracker= Sort(max_age=5, min_hits=3, iou_threshold=0.2)      
+        self.tracker= Sort(max_age=5, min_hits=3, iou_threshold=0.1)      
         
     def predict(self, image, frame_number):
         """
