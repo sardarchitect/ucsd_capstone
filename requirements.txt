@@ -1,15 +1,1 @@
-pip-upgrader
-numpy
-streamlit==1.22.0
-tqdm==4.65.0
-matplotlib==3.7.1
-pandas==1.5.3
-opencv_python==4.7.0.72
-plotly==5.9.0
-scipy==1.10.1
-seaborn==0.12.2
-scikit-image
-torch==2.0.1
-filterpy==1.4.5
-wheel
-lap==0.4.0
+
