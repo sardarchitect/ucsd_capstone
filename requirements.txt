@@ -11,4 +11,5 @@ seaborn==0.12.2
 scikit-image==0.17.2
 torch==2.0.1
 filterpy==1.4.5
+wheel
 lap==0.4.0
