@@ -6,22 +6,33 @@
 - [x] Survey Existing Research and Reproduce Available Solutions
 - [x] Try Various Models
 - [x] Build Your Machine Learning (or Deep Learning) Prototype
-- [ ] Scale Your Prototype with Large-Scale Data
+- [x] Scale Your Prototype with Large-Scale Data
 - [ ] Study Optional units (Advanced Capstone only)
-- [ ] Pick your deployment method
-- [ ] Design Your Deployment Solution Architecture
-- [ ] Run Your Code End-to-End with Logging and Testing
-- [ ] Deployment Implementation
+- [x] Pick your deployment method
+- [x] Design Your Deployment Solution Architecture
+- [x] Run Your Code End-to-End with Logging and Testing
+- [x] Deployment Implementation
 - [ ] Share your project with the world
 - [ ] Final Submission
 
 ## Final Deliverable
-- [ ] Web Interface
-- [ ] Web API
-- [ ] Training Pipeline
-- [ ] Testing Pipeline
-- [ ] Preprocessing Pipeline
-- [ ] Inference Pipeline
-- [ ] Data Storage
+- [x] Web Interface
+- [x] Web API
+- [x] Training Pipeline
+- [x] Testing Pipeline
+- [x] Preprocessing Pipeline
+- [x] Inference Pipeline
+- [x] Data Storage
 - [ ] Output Storage
 - [ ] Generative model integration
+
+## Code Flow
+- set_page_config
+- state.initialize
+- ui.header()
+- uploaded_file = ui.sidebar()
+- if running:
+    - compute.get_video_metadata
+    - compute.predict
+    - compute.postprocess_videos
+    - ui.analysis_dashboard()

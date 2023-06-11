@@ -5,10 +5,10 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python: Any_Name",
+            "name": "Python: StreetStudy App",
             "type": "python",
             "request": "launch",
-            "cwd": "${fileDirname}",
+            "cwd": "${workspaceFolder}",
             "module": "streamlit",
             "args": [
                 "run", "app.py"
