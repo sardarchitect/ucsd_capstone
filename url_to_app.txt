@@ -1,0 +1,2 @@
+Please use the URL below to go to the latest version of the app:
+https://sardarchitect-ucsd-capstone-app-f960t6.streamlit.app/
