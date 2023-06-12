@@ -17,7 +17,7 @@ pip install -r requirements.txt
 ## Usage
 ### Streamlit App
 <details open>
-The primary way of using StreetStudy is through [[Streamlit]](https://streamlit.io/) which is a fast, Python-based app development framework.
+The primary way of using StreetStudy is through [Streamlit](https://streamlit.io/) which is a fast, Python-based app development framework.
 
 ```bash
 streamlit run app.py
