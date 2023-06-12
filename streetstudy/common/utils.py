@@ -33,10 +33,8 @@ def frame_generator(path:str) -> Generator[np.ndarray, None, None]:
     video = cv.VideoCapture(path)
     while video.isOpened():
         success, frame = video.read()
-        
         if not success:
             break
-
         yield frame
     
     video.release()
