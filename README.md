@@ -5,7 +5,8 @@ create more pedestrian-friendly, accessible, and sustainable urban areas.
 
 ## Setup
 <details open>
-Clone repo and install the requirements in a [**Python>=3.8.0**](https://www.python.org/) environment.
+Clone repo and install the requirements in a [**Python>=3.8.0**] (https://www.python.org/) environment.
+
 ```bash
 git clone https://github.com/sardarchitect/ucsd_capstone.git
 cd ucsd_capstone
