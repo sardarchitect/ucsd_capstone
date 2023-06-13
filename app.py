@@ -1,6 +1,6 @@
 # Imports
 import matplotlib
-matplotlib.use('Agg')
+matplotlib.use('WebAgg')
 import streamlit as st
 
 # App Library

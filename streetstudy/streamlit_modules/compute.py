@@ -1,5 +1,4 @@
 import matplotlib
-matplotlib.use('TKAgg')
 import os
 import tempfile
 import pickle
