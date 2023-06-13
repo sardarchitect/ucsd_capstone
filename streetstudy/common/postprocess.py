@@ -19,7 +19,6 @@ def bounding_boxes(ax, preds, current_frame_number):
                 (bbox[1], bbox[2]), 
                 bbox[3] - bbox[1], 
                 bbox[4] - bbox[2], 
-                rotation_point='xy',
                 facecolor='none', 
                 ec='r', 
                 lw=1)
