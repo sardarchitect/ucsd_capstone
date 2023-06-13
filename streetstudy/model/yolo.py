@@ -1,5 +1,5 @@
 import torch 
-from sort.sort import Sort
+from streetstudy.common.sort import Sort
 import numpy as np
 
 class YoloModel():
