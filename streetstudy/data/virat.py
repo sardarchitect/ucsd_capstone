@@ -1,121 +1,114 @@
-import logging #todo
-from typing import Optional as O
+# Imports
+#import logging
 import os
 import cv2 as cv
+from tqdm.auto import tqdm
+from typing import Optional as O
 import pandas as pd
 import numpy as np
-from tqdm.auto import tqdm
 
-
-def get_dataset_directories():
+def get_dataset_directories(data_dir):
     """
     Get absolute paths to the VIRAT dataset directories
-
-    Keyword arguments:
-    None
     
-    Return:
-    data_dir -- Parent data folder
-    annotation_dir -- Annotations folder
-    video_dir -- Raw videos folder
+    Args:
+        data_dir (str): Parent data folder
+
+    Returns:
+        data_dir (str): Parent data folder
+        annotation_dir (str): Annotations folder
+        video_dir (str): Raw videos folder
     """
-    # data_dir = '/home/sardarchitect/datasets/virat/'
-    data_dir = '/mnt/d/data/virat/'
     annotation_dir = data_dir + 'annotations/'
     video_dir = data_dir + 'videos/'
+    
     return data_dir, annotation_dir, video_dir
 
 def get_column_names(name):
     """
-    Get column names for VIRAT dataset annotations
+    Get column names for VIRAT dataset annotation files
 
     Keyword arguments:
-    name -- Type of annotation file
+        name (str): Type of annotation file
 
-    Return:
-    dict -- Dictionary of column names
+    Returns:
+        dict: Dictionary of column names for specifed file
     """
-    if name == "events_type":
-        events_type = {
-        1: "Person loading an Object to a Vehicle",
-        2: "Person Unloading an Object from a Car/Vehicle",
-        3: "Person Opening a Vehicle/Car Trunk",
-        4: "Person Closing a Vehicle/Car Trunk",
-        5: "Person getting into a Vehicle",
-        6: "Person getting out of a Vehicle",
-        7: "Person gesturing",
-        8: "Person digging",
-        9: "Person carrying an object",
-        10: "Person running",
-        11: "Person entering a facility",
-        12: "Person exiting a facility"
+
+    column_names = {
+        'events_type': {
+            1: 'Person loading an Object to a Vehicle',
+            2: 'Person Unloading an Object from a Car/Vehicle',
+            3: 'Person Opening a Vehicle/Car Trunk',
+            4: 'Person Closing a Vehicle/Car Trunk',
+            5: 'Person getting into a Vehicle',
+            6: 'Person getting out of a Vehicle',
+            7: 'Person gesturing',
+            8: 'Person digging',
+            9: 'Person carrying an object',
+            10: 'Person running',
+            11: 'Person entering a facility',
+            12: 'Person exiting a facility'
+        }, 
+        'events': {
+            0: 'event_id',
+            1: 'event_type',
+            2: 'duration',
+            3: 'start_frame',
+            4: 'end_frame',
+            5: 'current_frame',
+            6: 'bbox_lefttop_x',
+            7: 'bbox_lefttop_y',
+            8: 'bbox_width',
+            9: 'bbox_height'
+        },
+        'mapping': {
+            0: 'event_id',
+            1: 'event_type',
+            2: 'event_duration',
+            3: 'start_frame',
+            4: 'end_frame',
+            5: 'num_obj'
+        }, 
+        'objects_type': {
+            0: 'person',
+            1: 'car',
+            2: 'vehicles',
+            3: 'object',
+            4: 'bike, bicycles'
+        },
+        'objects': {
+            0: 'object_id',
+            1: 'object_duration',
+            2: 'current_frame',
+            3: 'bbox_lefttop_x',
+            4: 'bbox_lefttop_y',
+            5: 'bbox_width',
+            6: 'bbox_height',
+            7: 'object_type'
         }
-        return events_type
-    elif name == "events":
-        events = {
-        0: "event_id",
-        1: "event_type",
-        2: "duration",
-        3: "start_frame",
-        4: "end_frame",
-        5: "current_frame",
-        6: "bbox_lefttop_x",
-        7: "bbox_lefttop_y",
-        8: "bbox_width",
-        9: "bbox_height"
-        }
-        return events
-    elif name == "mapping":
-        mapping = {
-        0: "event_id",
-        1: "event_type",
-        2: "event_duration",
-        3: "start_frame",
-        4: "end_frame",
-        5: "num_obj"
-        }
-        return mapping
-    elif name == "objects_type":
-        objects_type = {
-        0: "person",
-        1: "car",
-        2: "vehicles",
-        3: "object",
-        4: "bike, bicycles"
-        }
-        return objects_type
-    elif name == "objects":
-        objects = {
-        0: "object_id",
-        1: "object_duration",
-        2: "current_frame",
-        3: "bbox_lefttop_x",
-        4: "bbox_lefttop_y",
-        5: "bbox_width",
-        6: "bbox_height",
-        7: "object_type"
-        }
-        return objects
-    else:
-        print('Provide a valid column name')
+    }
+    return column_names.get(name, None)
 
 def get_dataset_df():
     """
-    Get a Pandas DataFrame containtaing VIRAT dataset metadata
-    
-    Keyword Arguments:
-    None
+    Get a Pandas DataFrame containing VIRAT dataset metadata
 
-    Return:
-    videos_df -- Pandas DataFrame containing VIRAT dataset video_names, paths, annotation files, and video duration'
-    Creates a cache directory to store DataFrame in "pickle" format
-    Returns DataFrame from cache if cache directory found
+    Returns:
+        videos_df (pd.DataFrame): DataFrame containing VIRAT dataset information
+   
+    This function gets metadata for the VIRAT dataset such as video names, paths, annotation files, and video duration,
+    and creates a cache directory to store the DataFrame in 'pickle' format. If the cache directory exists, the function returns
+    the DataFrame from the cache instead of regenerating it.
     """
-    _, annotation_dir, video_dir = get_dataset_directories()
 
-    # If DataFrame already exists, return DataFrame
-    if os.path.exists('./.data_cache/videos_df.pkl'):
-        return pd.read_pickle('./.data_cache/videos_df.pkl')
+    # Retrieve dataset directories
+    _, annotation_dir, video_dir = get_dataset_directories(data_dir='/home/sardarchitect/datasets/virat')
+
+    # Check if DataFrame already exists in the cache, return it if found
+    cache_path = './.data_cache/videos_df.pkl'
+    if os.path.exists(cache_path):
+        return pd.read_pickle(cache_path)
     
     # Create a temporary list to store video data
     videos_list = []
@@ -130,11 +123,11 @@ def get_dataset_df():
         image_height = capture.get(cv.CAP_PROP_FRAME_HEIGHT)
 
         for file in os.listdir(annotation_dir):
-            if video_name in file and "events" in file:
+            if video_name in file and 'events' in file:
                 video_event_file = file
-            if video_name in file and "objects" in file:
+            if video_name in file and 'objects' in file:
                 video_object_file = file
-            if video_name in file and "mapping" in file:
+            if video_name in file and 'mapping' in file:
                 video_mapping_file = file
         
         videos_list.append([video_name, video_path, num_frames, duration, image_width, image_height, video_event_file, video_object_file, video_mapping_file])
@@ -152,7 +145,7 @@ def get_dataset_df():
     # Store DataFrame in cache folder
     if not os.path.exists('./.data_cache'):
         os.mkdir('./.data_cache')
-    videos_df.to_pickle("./.data_cache/videos_df.pkl")    
+    videos_df.to_pickle('./.data_cache/videos_df.pkl')    
     return videos_df
 
 def get_annotations_df(video_path, type='object', format='virat', normalize=False, object_id=False):
@@ -161,8 +154,8 @@ def get_annotations_df(video_path, type='object', format='virat', normalize=Fals
 
     Keyword Arguments:
     video_path -- path to video
-    type -- annotation type to return (default "object")
-    format -- format of DataFrame to return ("virat", "yolo") (default "virat")
+    type -- annotation type to return (default 'object')
+    format -- format of DataFrame to return ('virat', 'yolo') (default 'virat')
     normalize -- returns coordinates normalized to image frame dimensions (default=False)
     object_id -- returns object_id
 
@@ -261,7 +254,7 @@ def build_virat_to_yolo_directory(video, annotation_df, save_dir):
         if not success:
             print('Something went wrong while extracting video frames')
             break
-        cv.imwrite(f"{save_dir}/images/{video.name}_{count}.jpg", image)
+        cv.imwrite(f'{save_dir}/images/{video.name}_{count}.jpg', image)
 
         # Extract annotation
         bboxs = annotation_df[annotation_df['current_frame'] == count][['object_type', 'bbox_center_x', 'bbox_center_y', 'bbox_width', 'bbox_height']]

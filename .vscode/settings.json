@@ -1,3 +1,6 @@
 {
-    "python.analysis.extraPaths": ["${workspaceFolder}/libs/"]
+    "python.analysis.extraPaths": [
+        "${workspaceFolder}/libs/"
+    ],
+    "python.linting.enabled": true
 }

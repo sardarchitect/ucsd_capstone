@@ -3,14 +3,14 @@ import scipy.optimize
 
 def bbox_iou(boxA, boxB):
     """
-    Finds IOU for two bounding boxes
+    Calculate the Intersection over Union (IOU) for two bounding boxes
     
-    Keyword Arguments:
-    boxA -- first bounding box with top-left and bottom-right x-y coordinates in a list
-    boxB -- second bounding box with top-left and bottom-right x-y coordinates in a list
+    Args:
+    boxA (list): First bounding box with top-left and bottom-right x-y coordinates
+    boxB (list): Second bounding box with top-left and bottom-right x-y coordinates
     
-    Return:
-    iou -- percent overlap (0 = none, 1 = perfect-fit)
+    Returns:
+        float: IOU value representing the percent overlap between the two bounding boxes (0 = none, 1 = perfect fit).
     """
     xA = max(boxA[0], boxB[0])
     yA = max(boxA[1], boxB[1])
@@ -32,16 +32,18 @@ def bbox_iou(boxA, boxB):
 
 def match_bboxes(bbox_gt, bbox_pred, IOU_THRESH=0.01):
     """
-    Given sets of ground truth and predicted bounding boxes, determine best possible match.
-    
-    Keyword Arguments:
-    bbox_gt -- bounding boxes for ground truth
-    bbox_pred -- bounding boxes for predictions
-    
-    Return:
-    
+    Determine the best possible match between sets of ground truth and predicted bounding boxes.
+
+    Args:
+        bbox_gt (np.ndarray): Ground truth bounding boxes.
+        bbox_pred (np.ndarray): Predicted bounding boxes.
+        IOU_THRESH (float, optional): IOU threshold for considering a match. Defaults to 0.01.
+
+    Returns:
+        tuple: Tuple containing the indices of the matched ground truth and predicted bounding boxes,
+               the IOU values for the matches, and the labels indicating the validity of the matches.
     """
-    
+
     MIN_IOU = 0
     
     num_gt = len(bbox_gt)
@@ -80,14 +82,22 @@ def match_bboxes(bbox_gt, bbox_pred, IOU_THRESH=0.01):
     ious_actual = iou_matrix[idx_gt_actual, idx_pred_actual]
     sel_valid = (ious_actual > IOU_THRESH)
     label = sel_valid.astype(int)
+
     return idx_gt_actual[sel_valid], idx_pred_actual[sel_valid], ious_actual[sel_valid], label
 
 def precision_recall(bbox_gt, bbox_pred, bbox_pred_labels):
     """
-    Returns precision and recall of given bounding boxes
-    
+    Calculate precision and recall for the given bounding boxes.
+
+    Args:
+        bbox_gt (np.ndarray): Ground truth bounding boxes.
+        bbox_pred (np.ndarray): Predicted bounding boxes.
+        bbox_pred_labels (np.ndarray): Labels indicating the validity of the predicted bounding boxes.
+
+    Returns:
+        tuple: Tuple containing the precision and recall values.
     """
-    
+
     total_gt = len(bbox_gt)
     total_pred = len(bbox_pred)
 

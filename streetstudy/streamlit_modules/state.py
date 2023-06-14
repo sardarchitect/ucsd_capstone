@@ -1,10 +1,15 @@
-from streetstudy.common import utils 
+# Imports
 import streamlit as st
 import shutil
 import os
 
+# Import app modules
+from streetstudy.common import utils 
+
 def initialize():
-    print("Running initalize")
+    """
+    Initialize the session state variables.
+    """
     if "save_path" not in st.session_state:
         st.session_state["save_path"] = '.data_cache/'
         if os.path.exists(st.session_state["save_path"]):
@@ -46,10 +51,16 @@ def initialize():
     
 
 def running(uploaded_file):
+    """
+    Start or stop the "running" flag based on current state and whether uploaded file is ".mp4".
+
+    Args:
+        uploaded_file (Object): Uploaded video file object.
+    """
     if uploaded_file is None or uploaded_file.name[-3:] != "mp4":
         # Assert and read video
         st.error("Please upload a valid .mp4 file")
-        st.session_state['is_run'] == False
+        st.session_state['running'] == False
     else:
         st.session_state["cache_video_dict"] = False
         st.session_state["cache_preds"] = False
