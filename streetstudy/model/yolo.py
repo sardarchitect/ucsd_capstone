@@ -37,7 +37,7 @@ class YoloModel():
             3: bbox_bottomright_x
             4: bbox_bottomright_y
             5: conf
-            6: class (0 is person class)
+            6: object_id (using SORT Tracker)
         """
         preds = self.model(image).xyxy[0]
         preds = self.tracker.update(preds[:, :4].cpu().numpy())
