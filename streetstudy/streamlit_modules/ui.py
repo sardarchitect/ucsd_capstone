@@ -29,8 +29,11 @@ def sidebar():
         st.markdown("1. Upload a .mp4 video (max. size 500mb)")
         st.markdown("2. Click Run")
         st.markdown("3. Filter model results to display various analysis visualizations")
-        uploaded_file = st.file_uploader(label='Upload a file', label_visibility="hidden")
-        st.button(label=('Run' if st.session_state['running'] == False else "Stop"), args=[uploaded_file], on_click=state.running)        
+        
+        uploaded_file = st.file_uploader(label='Upload a file', label_visibility="hidden", type="mp4")
+        st.button(label=('Run' if st.session_state['running'] == False else "Stop"), args=[uploaded_file], on_click=state.running)
+        st.button(label='Demo', args=['demo'], on_click=state.running)
+        
         st.subheader("Citations")
 
         return uploaded_file

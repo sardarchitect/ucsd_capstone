@@ -26,9 +26,14 @@ def get_video_metadata(uploaded_file):
     video_metadata_path = os.path.join(st.session_state['save_path'], 'video_metadata.pkl')
 
     if not os.path.exists(video_metadata_path):
-        tfile = tempfile.NamedTemporaryFile(delete=False)
-        tfile.write(uploaded_file.read())
-        video_metadata = utils.get_video_metadata(tfile.name)
+        if not st.session_state['is_demo'] == True:
+            tfile = tempfile.NamedTemporaryFile(delete=False)
+            tfile.write(uploaded_file.read())
+            file_path = tfile.name
+        else:
+            file_path = 'sample_data/VIRAT_S_010204_03_000606_000632.mp4'
+        
+        video_metadata = utils.get_video_metadata(file_path)
         with open(video_metadata_path, 'wb') as f:
             pickle.dump(video_metadata, f)
     else:
@@ -160,11 +165,11 @@ def show_interactive_plot(video_metadata, preds):
         continue
 
     if st.session_state['analysis_type'] == 'heatmap':
-        postprocess.heatmap(ax, preds, current_frame_number)
+        postprocess.heatmap(preds, current_frame_number, ax)
     if st.session_state['analysis_type'] == 'bounding_boxes':
-        postprocess.bounding_boxes(ax, preds, current_frame_number)
+        postprocess.bounding_boxes(preds, current_frame_number, ax)
     if st.session_state['analysis_type'] == 'directional_arrows':
-        postprocess.directional_arrows(ax, preds, current_frame_number)
+        postprocess.directional_arrows(preds, current_frame_number, ax)
     
     ax.imshow(cv.cvtColor(frame, cv.COLOR_BGR2RGB))
     st.pyplot(fig)

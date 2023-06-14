@@ -49,6 +49,8 @@ def initialize():
     if 'current_frame_number' not in st.session_state:
         st.session_state["current_frame_number"] = 0
     
+    if 'is_demo' not in st.session_state:
+        st.session_state["is_demo"] = False
 
 def running(uploaded_file):
     """
@@ -57,11 +59,13 @@ def running(uploaded_file):
     Args:
         uploaded_file (Object): Uploaded video file object.
     """
-    if uploaded_file is None or uploaded_file.name[-3:] != "mp4":
+    if uploaded_file is None:
         # Assert and read video
         st.error("Please upload a valid .mp4 file")
         st.session_state['running'] == False
     else:
+        if uploaded_file == 'demo':
+            st.session_state["is_demo"] = True
         st.session_state["cache_video_dict"] = False
         st.session_state["cache_preds"] = False
         st.session_state["cache_postprocess"] = False
