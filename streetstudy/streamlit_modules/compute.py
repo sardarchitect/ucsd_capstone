@@ -127,7 +127,8 @@ def postprocess_videos(video_metadata, preds, SKIP=25):
         count+=1
     
     for folder in os.listdir(st.session_state['save_path']):
-        utils.generate_video(os.path.join(st.session_state['save_path'], folder))
+        if os.path.isdir(os.path.join(st.session_state['save_path'], folder)):
+            utils.generate_video(os.path.join(st.session_state['save_path'], folder))
     
     loading_bar.empty()
     capture.release()
