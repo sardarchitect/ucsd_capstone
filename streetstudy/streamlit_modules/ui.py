@@ -26,15 +26,19 @@ def sidebar():
     """
     with st.sidebar:
         st.subheader("Usage")
-        st.markdown("1. Upload a .mp4 video (max. size 500mb)")
+        st.markdown("1. Upload a .mp4 video (max. size 500MB)")
         st.markdown("2. Click Run")
         st.markdown("3. Filter model results to display various analysis visualizations")
         
-        uploaded_file = st.file_uploader(label='Upload a file', label_visibility="hidden", type="mp4")
-        st.button(label=('Run' if st.session_state['running'] == False else "Stop"), args=[uploaded_file], on_click=state.running)
+        st.markdown('Or click the **Demo** button below for an example')
         st.button(label='Demo', args=['demo'], on_click=state.running)
         
+        uploaded_file = st.file_uploader(label='Upload a file', label_visibility="hidden", type="mp4")
+        st.button(label=('Run' if st.session_state['running'] == False else "Stop"), args=[uploaded_file], on_click=state.running)
+        
         st.subheader("Citations")
+        st.markdown("[Ultralytics - YOLOv5](https://github.com/ultralytics/yolov5)")
+        st.markdown("[SORT](https://github.com/abewley/sort) N. Wojke, A. Bewley, D. Paulus. *Simple Online and Relative Tracking with Deep Association Metric*. 2017.")
 
         return uploaded_file
 
