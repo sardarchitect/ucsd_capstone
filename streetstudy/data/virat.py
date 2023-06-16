@@ -162,7 +162,7 @@ def get_annotations_df(video_path, type='object', format='virat', normalize=Fals
     Return:
     annotation_df -- A Pandas DataFrame for the specified annotation file for the specified video from the VIRAT dataset
     """
-    _, annotation_dir, _ = get_dataset_directories()
+    _, annotation_dir, _ = get_dataset_directories(data_dir='/mnt/d/data/virat/')
     videos_df = get_dataset_df()
     
     # Find video in DataFrame
@@ -175,6 +175,13 @@ def get_annotations_df(video_path, type='object', format='virat', normalize=Fals
         objects_col = get_column_names('objects')
         annotation_df = annotation_df.rename(objects_col, axis=1)
         annotation_df = annotation_df[annotation_df['object_type'] == 1]
+    
+    if type=='mapping':
+        # Find associated objects file
+        annotation_df = pd.read_csv(annotation_dir + video['mapping_file'][0], delim_whitespace=True, header=None)
+        # Rename columns
+        mappings_col = get_column_names('mapping')
+        annotation_df = annotation_df.rename(mappings_col, axis=1)
 
     if type=='events':
         # Find associated objects file
